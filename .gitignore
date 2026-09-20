@@ -1,0 +1,10 @@
+logs/
+data/raw/
+data/processed/
+plots/*.pdf
+plots/*.png
+plots/*.eps
+plots/**/*.pdf
+plots/**/*.png
+plots/**/*.eps
+*.jld2.tmp-*

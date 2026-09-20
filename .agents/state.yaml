@@ -1,0 +1,24 @@
+updated: 2026-09-20
+stage: coarse_spectrum_scan
+status: active
+scope:
+  cluster: 3x4
+  sites: 12
+  filling: {nup: 6, ndn: 6}
+  deferred: [4x4]
+constraints:
+  julia_on_login: forbidden
+  slurm_partition: test
+  walltime_limit: 01:00:00
+scan:
+  coarse_u_over_t: {start: 6.0, stop: 14.0, step: 0.5}
+  levels_per_block: 6
+  production_momentum_stars: 7
+  c2_resolved_momenta: [[0, 0], [0, 2]]
+current_gate: production_coarse_scan
+next_action: commit_validated_baseline_and_launch_153_task_scan
+jobs:
+  - {id: 3324639, purpose: sector_spectrum_validation, status: completed}
+artifacts:
+  - scripts/report_sector_dimensions.jl
+  - data/raw/N12/coarse/nx_0_ny_0_c2_p/u_06000.jld2
