@@ -8,6 +8,7 @@ from pathlib import Path
 os.environ.setdefault("MPLCONFIGDIR", "/tmp/xdiag_tri_hubbard_matplotlib")
 
 import matplotlib.pyplot as plt
+import matplotlib.patheffects as path_effects
 import numpy as np
 
 from plot_style import apply_plot_style
@@ -42,7 +43,9 @@ def displayed_momentum(nx, ny):
     if (nx, ny) == (0, 2):
         momentum = momentum + B2
     elif (nx, ny) == (2, 2):
-        momentum = momentum + B2
+        # Show this reciprocal image to the right of the first BZ, away from
+        # the compact legend above it.
+        momentum = momentum + B1 + B2
     return momentum
 
 
@@ -113,8 +116,13 @@ def plot_real_space(axis):
                   arrowprops=dict(arrowstyle="->", color="#D55E00", lw=1.5))
     axis.annotate("", xy=4 * A2, xytext=np.zeros(2),
                   arrowprops=dict(arrowstyle="->", color="#D55E00", lw=1.5))
-    axis.text(1.45, -0.25, r"$\mathbf{T}_1=3\mathbf{a}_1$",
-              color="#D55E00", ha="center", fontsize=11.5)
+    t1_label = axis.text(
+        1.50, -0.42, r"$\mathbf{T}_1=3\mathbf{a}_1$",
+        color="#D55E00", ha="center", va="top", fontsize=11.5, zorder=5,
+    )
+    t1_label.set_path_effects([
+        path_effects.withStroke(linewidth=2.8, foreground="white")
+    ])
     axis.text(0.48, 1.88, r"$\mathbf{T}_2=4\mathbf{a}_2$", color="#D55E00",
               rotation=60, ha="center", fontsize=11.5)
     axis.set_aspect("equal")
@@ -159,12 +167,17 @@ def plot_reciprocal_space(axis):
                  linewidths=1.45, zorder=3.5, label="ED representatives")
 
     for position, label in zip(momenta, labels):
-        offset_x = 0.08 if position[0] <= 0 else -0.08
-        alignment = "left" if position[0] <= 0 else "right"
-        offset_y = 0.09 if position[1] <= 0 else -0.09
+        if label == "(2,2)":
+            offset_x, offset_y = 0.10, 0.0
+            alignment, vertical_alignment = "left", "center"
+        else:
+            offset_x = 0.08 if position[0] <= 0 else -0.08
+            alignment = "left" if position[0] <= 0 else "right"
+            offset_y = 0.09 if position[1] <= 0 else -0.09
+            vertical_alignment = "bottom" if position[1] <= 0 else "top"
         axis.text(position[0] + offset_x, position[1] + offset_y, label,
                   fontsize=9.2, ha=alignment,
-                  va="bottom" if position[1] <= 0 else "top")
+                  va=vertical_alignment)
 
     # Use the BZ images adjacent to the folded representatives highlighted below.
     exact_k = np.array([-2 * np.pi / 3, 2 * np.pi / np.sqrt(3)])
