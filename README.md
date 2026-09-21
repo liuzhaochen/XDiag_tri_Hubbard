@@ -24,6 +24,10 @@ Persistent project status, decisions, and validation evidence live in
 [`.agents/`](.agents/README.md). The scientific specification is
 [`.agents/prompt.md`](.agents/prompt.md).
 
+The finite-cluster setup, symmetry blocks, numerical evidence, observed crossings,
+and plot index are collected in the
+[`physical report`](docs/physical_report.md).
+
 The coarse production grid is declared in
 [`config/scan_coarse.toml`](config/scan_coarse.toml). Each Slurm-array task writes
 one atomic raw record:

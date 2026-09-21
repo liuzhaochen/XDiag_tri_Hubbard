@@ -26,3 +26,18 @@
 - Single-level Lanczos remains useful as an independent ground-energy check; an
   unreliable multilevel result is never accepted merely because its criterion says
   `converged`.
+- Production keeps both gates: XDiag must report `converged` and the explicit
+  residual must be below `1e-8`. The sole coarse-array outlier `(1,3), U/t=14`
+  reached `8.93e-9` at 500 iterations but was rejected because its criterion remained
+  `maxiterations`; its targeted rerun uses a 1000-iteration cap.
+
+## 2026-09-21
+
+- Interpret the 12-site ED only as a finite-cluster crossing diagnostic. Neither
+  crossing brackets nor linear interpolation are presented as thermodynamic phase
+  boundaries or as a reproduction of iDMRG.
+- The two absolute-ground crossings are refined only in the competing
+  `(0,0,C2=+)` and `(1,0)` blocks. Other low-lying crossings remain explicit
+  candidates for discussion before further targeted work.
+- The reader-facing scientific narrative is maintained in
+  `docs/physical_report.md`; `.agents` remains the compact operational ledger.

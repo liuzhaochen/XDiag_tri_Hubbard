@@ -16,9 +16,9 @@
 - [x] Compare translation-only and `C2`-resolved spectra at `(0,0)` and `(0,2)`.
 - [x] Benchmark multi-level Lanczos, reject its ghost spectrum, and validate guarded
   LOBPCG as the production solver.
-- [ ] Run the 12-site coarse scan over `U/t = 6:0.5:14`.
-- [ ] Analyze all sectors and the focused `Ky=0,pi` branches.
-- [ ] Refine only around identified candidate crossings.
+- [x] Run and validate the 12-site coarse scan over `U/t = 6:0.5:14`.
+- [x] Analyze all sectors and the focused `Ky=0,pi` branches.
+- [x] Refine the two identified ground crossings on the `Ky=0` line.
 - [ ] Measure minimal observables only for states involved in a crossing.
 - [ ] Discuss whether a `4 x 4` calculation is scientifically and computationally justified.
 

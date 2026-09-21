@@ -9,7 +9,12 @@ config = TOML.parsefile(config_path)
 
 cluster = config["cluster"]
 torus = TriangularTorus(Int(cluster["Lx"]), Int(cluster["Ly"]))
-sectors = production_sector_specs(torus)
+all_sectors = production_sector_specs(torus)
+selected_indices = haskey(config["sectors"], "indices") ?
+    Int.(config["sectors"]["indices"]) : collect(eachindex(all_sectors))
+sectors = all_sectors[selected_indices]
+length(sectors) == Int(config["sectors"]["expected_count"]) ||
+    error("selected sector count mismatch")
 u_values = Float64.(config["trajectory"]["values"])
 nlevels = Int(config["solver"]["neigenvalues"])
 raw_root = abspath(config["output"]["root"])

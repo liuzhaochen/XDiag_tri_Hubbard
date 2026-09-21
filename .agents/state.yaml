@@ -1,6 +1,6 @@
-updated: 2026-09-20
-stage: coarse_spectrum_scan
-status: active
+updated: 2026-09-21
+stage: crossing_review
+status: awaiting_scientific_selection
 scope:
   cluster: 3x4
   sites: 12
@@ -15,10 +15,20 @@ scan:
   levels_per_block: 6
   production_momentum_stars: 7
   c2_resolved_momenta: [[0, 0], [0, 2]]
-current_gate: production_coarse_scan
-next_action: commit_validated_baseline_and_launch_153_task_scan
+current_gate: select_additional_crossing_diagnostics
+next_action: discuss_which_low_lying_crossings_merit_overlaps_or_observables
 jobs:
   - {id: 3324639, purpose: sector_spectrum_validation, status: completed}
+  - {id: 3325184, purpose: N12_coarse_spectrum, status: completed_with_one_targeted_rerun}
+  - {id: 3325397, purpose: coarse_postprocessing, status: completed}
+  - {id: 3325410, purpose: dense_ground_crossings, status: completed}
 artifacts:
   - scripts/report_sector_dimensions.jl
   - data/raw/N12/coarse/nx_0_ny_0_c2_p/u_06000.jld2
+  - data/processed/N12/coarse_summary.jld2
+  - data/processed/N12/coarse_summary.csv
+  - data/processed/N12/coarse_analysis.txt
+  - data/processed/N12/dense_summary.jld2
+  - data/processed/N12/dense_summary.csv
+  - data/processed/N12/dense_analysis.txt
+  - docs/physical_report.md

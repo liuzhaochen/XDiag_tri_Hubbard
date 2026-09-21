@@ -9,6 +9,7 @@ at the beginning of every work session.
 - `DECISIONS.md`: durable technical and physics decisions.
 - `VALIDATION.md`: completed checks, measured resources, and open gates.
 - `SECTORS.md`: momentum stars, little groups, and measured block dimensions.
+- `RESULTS.md`: concise validated spectral findings and refinement targets.
 
 Update the ledger whenever a decision, validation result, scan window, data schema,
 or production constraint changes. Store numerical output outside `.agents/` and link

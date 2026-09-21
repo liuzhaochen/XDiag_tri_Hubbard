@@ -1,0 +1,44 @@
+schema_version = 1
+name = "N12_dense_ground_crossings"
+
+[cluster]
+Lx = 3
+Ly = 4
+N = 12
+nup = 6
+ndn = 6
+
+[trajectory]
+parameter = "U_over_t"
+values = [
+  6.55, 6.60, 6.65, 6.70, 6.75, 6.80, 6.85, 6.90, 6.95,
+  9.05, 9.10, 9.15, 9.20, 9.25, 9.30, 9.35, 9.40, 9.45,
+]
+t = 1.0
+
+[sectors]
+selection = "targeted_ground_crossing_branches"
+indices = [1, 6]
+labels = ["(0,0,C2=+)", "(1,0)"]
+expected_count = 2
+
+[solver]
+algorithm = "eigs_lobpcg"
+operator_mode = "csr32"
+neigenvalues = 6
+guard_eigenvalues = 2
+precision = 1.0e-10
+residual_acceptance_limit = 1.0e-8
+orthogonality_tolerance = 1.0e-8
+max_iterations = 1000
+random_seed = 43
+retry_count = 3
+retry_seed_stride = 104729
+save_eigenvectors = false
+
+[output]
+format = "JLD2"
+schema_version = 1
+root = "data/raw/N12/dense"
+one_file_per_sector_and_parameter = true
+overwrite = false

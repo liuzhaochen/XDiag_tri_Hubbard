@@ -1,6 +1,6 @@
 # Validation ledger
 
-Updated: 2026-09-20
+Updated: 2026-09-21
 
 ## Required geometry and symmetry checks
 
@@ -52,3 +52,26 @@ spectrum agrees with XDiag to `1e-11`.
   sorted union of the `C2=+/-` levels at all three couplings, with the same
   `1.95e-14 t` worst-case scale.
 - Task elapsed times were 8:43--14:10 and peak RSS was 588,664 KiB.
+
+## Completed coarse scan
+
+- Slurm array job 3325184 produced 152 accepted records directly. Task 153
+  `(1,3), U/t=14` exhausted three 500-iteration seeds and wrote no partial result.
+- A targeted 1000-iteration rerun converged on its first seed in 74.24 s with
+  maximum residual `9.66e-11`, completing all 153 expected records.
+- The summary validator found exactly 153 records with no unexpected files.
+- Maximum reported residual: `8.59e-9`; maximum independently recomputed residual:
+  `8.59e-9`; maximum eigenvector orthogonality error: `3.00e-15`.
+- Array task walltimes were 0:27--4:04 and maximum peak RSS was 589,116 KiB.
+- Portable outputs are `data/processed/N12/coarse_summary.jld2` and
+  `coarse_summary.csv`; five overview plots were generated as PDF and PNG.
+
+## Completed dense crossing scan
+
+- Slurm array job 3325410 completed all 36 targeted records in the
+  `(0,0,C2=+)` and `(1,0)` blocks.
+- The validator found exactly 36 records with no unexpected files.
+- Maximum reported residual: `1.49e-10`; maximum independently recomputed residual:
+  `1.49e-10`; maximum eigenvector orthogonality error: `2.89e-15`.
+- Array task walltimes were 0:26--1:38 and maximum peak RSS was 557,180 KiB.
+- The two `0.05` crossing brackets are `6.60--6.65` and `9.30--9.35`.

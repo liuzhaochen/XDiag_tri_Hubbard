@@ -94,6 +94,13 @@ def main():
     )
     plot_panel(
         data,
+        keys,
+        args.output_directory / "all_sector_lowest_branches",
+        "3x4 triangular Hubbard: lowest state in each block",
+        all_levels=False,
+    )
+    plot_panel(
+        data,
         [(0, 0, 1), (0, 0, -1), (1, 0, 0)],
         args.output_directory / "Ky_0_spectrum",
         r"$K_y=0$",

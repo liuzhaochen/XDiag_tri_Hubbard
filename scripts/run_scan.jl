@@ -19,9 +19,16 @@ length(torus) == Int(cluster_config["N"]) || error("cluster size mismatch")
 nup, ndn = Int(cluster_config["nup"]), Int(cluster_config["ndn"])
 nup == 6 && ndn == 6 || error("production requires Nup=Ndn=6")
 
-sectors = production_sector_specs(torus)
-length(sectors) == Int(config["sectors"]["expected_blocks"]) ||
-    error("production sector count mismatch")
+all_sectors = production_sector_specs(torus)
+selected_indices = haskey(config["sectors"], "indices") ?
+    Int.(config["sectors"]["indices"]) : collect(eachindex(all_sectors))
+all(index -> 1 <= index <= length(all_sectors), selected_indices) ||
+    error("selected sector index out of range")
+length(Set(selected_indices)) == length(selected_indices) ||
+    error("selected sector indices contain duplicates")
+sectors = all_sectors[selected_indices]
+length(sectors) == Int(config["sectors"]["expected_count"]) ||
+    error("selected sector count mismatch")
 1 <= sector_index <= length(sectors) || error("sector index out of range")
 sector = sectors[sector_index]
 momentum, parity = sector.momentum, sector.parity
