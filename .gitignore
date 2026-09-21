@@ -8,3 +8,6 @@ plots/**/*.pdf
 plots/**/*.png
 plots/**/*.eps
 *.jld2.tmp-*
+.scratch/
+__pycache__/
+*.pyc

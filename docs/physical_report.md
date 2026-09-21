@@ -79,6 +79,60 @@ complete six-site spectrum from momentum blocks, explicit fermionic-matrix
 comparisons, all five `k <-> -k` partner checks, and reconstruction of the
 translation-only spectra from both `C2` parities.
 
+The observable rerun recomputed all six retained states in all 153 coarse-grid
+blocks. Every spectrum agrees with the original production energy to within
+`3.02e-14 t`; the largest explicit residual remains `8.59e-9`. A separate
+17-task calculation measured the ground-state chirality structure factor. In
+total, 170 raw observable records and 918 state rows pass the validator.
+
+## Observable definitions and momentum convention
+
+For each retained state we measure the double occupancy per site,
+
+\[
+D=\frac{1}{N}\sum_i\langle n_{i\uparrow}n_{i\downarrow}\rangle,
+\]
+
+and translation-averaged spin and connected charge structure factors,
+
+\[
+S(\mathbf q)=\sum_{\mathbf r}e^{i\mathbf q\cdot\mathbf r}
+\langle\mathbf S_0\cdot\mathbf S_{\mathbf r}\rangle,
+\qquad
+N(\mathbf q)=\sum_{\mathbf r}e^{i\mathbf q\cdot\mathbf r}
+\langle(n_0-1)(n_{\mathbf r}-1)\rangle.
+\]
+
+The conventional triangular-lattice corner `K=(-1/3,1/3)` is not an allowed
+momentum of this torus. Plots use the closest allowed point
+`Kcl=(-1/3,1/4)`, whose translation-sector label is `(nx,ny)=(2,1)`. Of the
+three `M` representatives, `M2=(0,-1/2)` is exactly allowed; the other two are
+represented by their closest cluster points. The cluster schematic explicitly
+shows all 12 allowed momenta and these choices.
+
+Scalar chirality is
+
+\[
+\chi_{ijk}=\mathbf S_i\cdot(\mathbf S_j\times\mathbf S_k)
+=i[\mathbf S_i\cdot\mathbf S_j,\mathbf S_j\cdot\mathbf S_k],
+\]
+
+with all 24 elementary up/down triangles oriented counterclockwise. The
+structure factor is normalized per triangle. Its implementation retains the
+full `2 x 2` Gram matrix of the up/down-triangle Fourier operators, including
+their distinct intra-cell centers. This is necessary to fold momenta and make
+the continuous first-Brillouin-zone visualization without dropping the
+two-sublattice form factor. Each allowed-momentum Gram matrix is checked to be
+Hermitian and positive semidefinite.
+
+For the finite-momentum ground region, the degenerate ground space is the
+time-reversal pair `{|k>,T|k>}` in `(1,0)` and `(2,0)`. Uniform chirality cannot
+mix the two states because it preserves momentum, while time reversal makes
+their diagonal matrix elements opposite. Thus its projected eigenvalues are
+exactly `+/- <k|chibar|k>`, which are evaluated from one representative. At
+`Gamma` the sampled ground is nondegenerate, so the projection is one
+dimensional.
+
 ## Observed crossings
 
 ### Ground branch on `Ky=0`
@@ -152,6 +206,82 @@ Within one irrep, sorted eigenvalues alone do not establish state identity acros
 `U/t`; overlaps or targeted observables would be needed to distinguish an avoided
 crossing from a rapid rearrangement.
 
+## Observable results
+
+### Ground branch
+
+The double occupancy decreases from `0.124682` at `U/t=6` to `0.021494` at
+`U/t=14`. The first momentum-changing ground crossing produces only a modest
+observable change. The second produces a much clearer branch switch: the
+`Gamma,C2=+` branch has stronger `Kcl` spin correlations and weaker `M2`
+correlations than the `(1,0)` branch.
+
+| `U/t` | ground block | `D` | `S(Kcl)` | `S(M2)` | `N(Kcl)` |
+|---:|---|---:|---:|---:|---:|
+| 6.0 | `(0,0,C2=+)` | 0.124682 | 0.811082 | 0.756704 | 0.300860 |
+| 8.0 | `(1,0)` | 0.080198 | 1.017817 | 1.067291 | 0.207080 |
+| 9.0 | `(1,0)` | 0.061089 | 1.123415 | 1.199851 | 0.161851 |
+| 9.5 | `(0,0,C2=+)` | 0.046730 | 1.548072 | 1.031221 | 0.130959 |
+| 14.0 | `(0,0,C2=+)` | 0.021494 | 2.016901 | 0.778196 | 0.065011 |
+
+At `U/t=8`, `S(Kcl)` and `S(M2)` remain comparable. At `U/t=14`, the much
+larger `S(Kcl)` is consistent with increasingly strong finite-cluster
+120-degree-like spin correlations. This statement concerns the structure factor
+on the 12-site torus, not an order-parameter extrapolation.
+
+The charge structure factors decrease smoothly as charge fluctuations are
+suppressed. Both `S(Gamma)` and connected `N(Gamma)` vanish to numerical
+precision in the singlet, fixed-particle-number ground states.
+
+### Low-lying states and the `Ky=pi` crossing
+
+At `U/t=8`, the retained `(1,0)` levels have gaps
+`0, 0.57244, 0.59012, 0.66484, 0.78806, 0.88425 t`. Thus there is only one
+state in the representative `(1,0)` block below `0.5 t`, but it has the exact
+time-reversal partner in `(2,0)`. Globally, several other irreps lie below
+`0.3 t`, as shown in the low-state observable plot.
+
+The low `Ky=pi` crossing is also visible in observables. At `U/t=9.5`, the
+lowest `(1,2)` state lies `0.013858 t` above the ground and just below the
+`(0,2,C2=-)` state at `0.014963 t`; at `U/t=10`, their gaps are respectively
+`0.023205 t` and `0.010907 t`. The states have clearly different spin patterns:
+at `U/t=10`, `(S(Kcl),S(M2))` is `(0.9103,0.8264)` for `(1,2)` and
+`(1.4638,1.7243)` for `(0,2,C2=-)`.
+
+### Chirality diagnostics and the CSL question
+
+No sampled ground state has a resolvable uniform scalar chirality. The projected
+value is zero in the `Gamma` ground states and at most `2.1e-13` in the
+`(1,0)/(2,0)` doublet. Across all 918 retained symmetry eigenstates, the largest
+absolute uniform chirality expectation is `1.33e-11`, at the scale of numerical
+noise.
+
+The connected chirality structure factor is nonzero, as expected for quantum
+fluctuations, but it does not peak uniformly in the intermediate momentum
+sector. Representative values are:
+
+| `U/t` | ground block | `Cchi(Gamma)` | `Cchi(Kcl)` | maximum on allowed grid |
+|---:|---|---:|---:|---:|
+| 6.0 | `(0,0,C2=+)` | 0.085970 | 0.055455 | 0.085970 |
+| 8.0 | `(1,0)` | 0.078778 | 0.074439 | 0.175952 |
+| 9.0 | `(1,0)` | 0.089739 | 0.078331 | 0.234335 |
+| 9.5 | `(0,0,C2=+)` | 0.264839 | 0.076022 | 0.264839 |
+| 14.0 | `(0,0,C2=+)` | 0.328275 | 0.065763 | 0.328275 |
+
+For the displayed `U/t=8`, `(1,0)` representative, the maximum is at the
+allowed first-zone point `(nx,ny)=(2,2)`, not at `Gamma` or `Kcl`. Its
+time-reversal partner has the momentum-reflected map. At `U/t=14`, the maximum
+is at `Gamma` and the map is inversion symmetric.
+
+These data do **not** justify identifying the `(1,0)` ground region as a chiral
+spin liquid. A momentum doublet and finite chirality fluctuations are not, by
+themselves, topological or chiral-order diagnostics; here the projected uniform
+chirality is numerically zero. Establishing a CSL would require additional
+evidence such as a robust quasi-degenerate topological manifold across cluster
+geometries or twists, flux response/spectral flow, and consistent entanglement
+or modular diagnostics. The present result should remain labeled a
+finite-cluster momentum-changing ground branch.
+
 ## Plots and machine-readable results
 
 The generated plots are:
@@ -163,16 +293,33 @@ The generated plots are:
 - `plots/N12/Ky_0_pi_lowest_branches.{pdf,png}`: focused line comparison;
 - `plots/N12/crossing_zoom.{pdf,png}`: dense energy differences at the two
   absolute-ground crossings.
+- `plots/N12/cluster_schematic.{pdf,png}`: real-space torus and all 12 allowed
+  momentum points, including the selected `Kcl`;
+- `plots/N12/ground_state_observables.{pdf,png}`: `D`, selected spin/charge
+  structure factors, and chirality diagnostics over the 17-point grid;
+- `plots/N12/low_lying_state_observables.{pdf,png}`: all retained states within
+  `0.6 t` of the ground, colored by observables;
+- `plots/N12/structure_factor_heatmaps.{pdf,png}`: continuous Fourier
+  visualizations for `U/t=8`, `(1,0)` and `U/t=14`, `Gamma,C2=+`; white dots
+  are the 12 actually available momenta. Between those dots the color field is
+  a finite Fourier interpolation, not additional ED momentum resolution.
 
-The corresponding tables are `data/processed/N12/coarse_summary.csv` and
-`dense_summary.csv`; JLD2 versions and plain-text analyses are stored beside them.
-Raw records, processed tables, and generated plots are intentionally ignored by
-Git because they are reproducible calculation products.
+The corresponding spectrum tables are `coarse_summary.csv` and
+`dense_summary.csv`. Observable products are `observables_summary_states.csv`,
+`observables_summary_ground.csv`, `observables_summary_chirality_grid.csv`,
+`observables_summary_chirality_sublattice_gram.csv`, and
+`observables_summary_heatmap_correlations.csv` under `data/processed/N12/`.
+JLD2 summaries are stored beside them. Raw records, processed tables, and
+generated plots are intentionally ignored by Git because they are reproducible
+calculation products.
 
 ## Current conclusion and next diagnostic
 
 The 12-site spectrum contains two resolved absolute-ground crossings on `Ky=0`,
 one very low `Ky=pi` excited-state crossing, and several further crossings among
-low block branches. The scientifically conservative next step is to choose which
-of these finite-cluster candidates merit state-overlap or minimal-observable
-diagnostics. A `4 x 4` calculation remains deferred.
+low block branches. The complete coarse-grid observable rerun characterizes the
+states on both sides without providing evidence for spontaneous scalar chirality
+in the intermediate `(1,0)/(2,0)` ground doublet. The next discussion can decide
+whether overlaps/twisted-boundary spectral flow are worthwhile and whether any
+`4 x 4` calculation is scientifically and computationally justified; `4 x 4`
+remains deferred for now.

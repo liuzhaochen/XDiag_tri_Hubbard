@@ -5,6 +5,7 @@ include("Symmetry.jl")
 include("Representations.jl")
 include("XDiagAdapter.jl")
 include("Hamiltonian.jl")
+include("Observables.jl")
 include("ResultIO.jl")
 
 export TriangularTorus,
@@ -27,8 +28,17 @@ export TriangularTorus,
        translation_operations_and_characters,
        little_group_operations_and_characters,
        xdiag_representation,
+       xdiag_permutation_group,
        xdiag_electron_block,
        build_hubbard_hamiltonian,
+       oriented_triangles,
+       site_fractional_coordinates,
+       structure_factor,
+       displacement_structure_factor,
+       triangle_structure_factor,
+       measure_observables,
+       chirality_fourier_operator,
+       measure_chirality_structure,
        sector_id,
        RESULT_SCHEMA_VERSION,
        result_record,

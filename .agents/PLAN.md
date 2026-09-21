@@ -19,7 +19,12 @@
 - [x] Run and validate the 12-site coarse scan over `U/t = 6:0.5:14`.
 - [x] Analyze all sectors and the focused `Ky=0,pi` branches.
 - [x] Refine the two identified ground crossings on the `Ky=0` line.
-- [ ] Measure minimal observables only for states involved in a crossing.
+- [x] Rerun all 153 coarse-grid blocks and measure double occupancy, spin/charge
+  correlations, and uniform chirality for all six retained levels.
+- [x] Measure the ground-state scalar-chirality structure factor at all 12 allowed
+  momenta, retaining the full up/down-triangle sublattice Gram matrix.
+- [x] Generate ground-state, low-state, representative heatmap, and cluster
+  schematic plots; incorporate their interpretation in the physical report.
 - [ ] Discuss whether a `4 x 4` calculation is scientifically and computationally justified.
 
 ## Production policy
@@ -30,3 +35,5 @@
 - Store compact JLD2 records; do not persist wavefunctions during the initial scan.
 - One Slurm-array task owns one `(sector, U/t)` result.
 - A result is accepted only after its solver diagnostics pass declared thresholds.
+- Continuous heatmap colors are finite Fourier visualizations; allowed cluster
+  momenta are always marked explicitly as dots.

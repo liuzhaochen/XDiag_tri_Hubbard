@@ -44,3 +44,15 @@
 - Treat the intermediate ground as a twofold `(1,0)/(2,0)` momentum-star pair.
   The label has `Tx=exp(+/- i 2 pi/3)` and `Ty=1` and is not identified with the
   conventional two-dimensional triangular-lattice `K` point.
+- The observable rerun covers the existing 17-point coarse grid only; no new dense
+  observable scan is needed because the crossing brackets are already resolved.
+- Use `Kcl=(-1/3,1/4)`, sector label `(2,1)`, as the closest allowed momentum to
+  the conventional triangular `K=(-1/3,1/3)` point.
+- Scalar chirality uses all 24 counterclockwise elementary triangles. Its momentum
+  structure retains the full up/down-triangle `2 x 2` Gram matrix so reciprocal
+  folding preserves the intra-cell form factor.
+- A continuous heatmap is a finite Fourier interpolation only. Every such plot
+  overlays the 12 actually allowed momenta.
+- Do not label the `(1,0)/(2,0)` region a CSL from this cluster: projected uniform
+  chirality is numerically zero, and finite chirality fluctuations plus a momentum
+  doublet are insufficient CSL diagnostics.

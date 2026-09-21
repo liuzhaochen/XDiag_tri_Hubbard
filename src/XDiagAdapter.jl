@@ -1,13 +1,17 @@
 import XDiag
 
+function xdiag_permutation_group(operations::Vector{AffineOperation})
+    permutations = [XDiag.Permutation(operation.permutation) for operation in operations]
+    return XDiag.PermutationGroup(permutations)
+end
+
 function xdiag_representation(
     operations::Vector{AffineOperation},
     characters::Vector{ComplexF64},
 )
     length(operations) == length(characters) ||
         throw(DimensionMismatch("one character is required per group operation"))
-    permutations = [XDiag.Permutation(operation.permutation) for operation in operations]
-    group = XDiag.PermutationGroup(permutations)
+    group = xdiag_permutation_group(operations)
     return XDiag.Representation(group, characters)
 end
 

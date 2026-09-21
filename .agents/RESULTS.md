@@ -56,3 +56,25 @@ lies `0.077558948956 t` above it, so the finite-momentum ground is a singlet.
   crossing candidates, not evidence of thermodynamic phases.
 
 The reader-facing interpretation is in `docs/physical_report.md`.
+
+## Completed observable rerun
+
+- All 153 coarse `(sector,U/t)` records were recomputed with six states each;
+  energies agree with the trusted scan within `3.02e-14 t`.
+- Double occupancy, spin and connected charge correlations, and uniform scalar
+  chirality are available for all 918 retained states.
+- Seventeen separate ground-state records contain the chirality structure factor
+  at all 12 momenta and the full up/down-triangle sublattice Gram matrix.
+- Ground-state double occupancy falls from `0.124682` at `U/t=6` to `0.021494`
+  at `U/t=14`; charge structure factors are correspondingly suppressed.
+- At `U/t=8`, `(S(Kcl),S(M2))=(1.017817,1.067291)`. At `U/t=14`, the values are
+  `(2.016901,0.778196)`, showing a strong high-`U` shift toward the closest
+  available `K` correlations.
+- Projected uniform chirality is at most `2.1e-13` in the intermediate ground
+  doublet. The largest uniform value among all 918 retained states is `1.33e-11`.
+- The connected chirality structure-factor maximum is `0.175952` at `U/t=8`
+  (allowed point `(2,2)`) and `0.328275` at `U/t=14` (`Gamma`). This is finite
+  fluctuation strength, not evidence of spontaneous chirality or a CSL.
+- At `U/t=8`, the representative `(1,0)` sector has retained level gaps
+  `0,0.57244,0.59012,0.66484,0.78806,0.88425 t`; the ground has an exact
+  time-reversal partner in `(2,0)`.

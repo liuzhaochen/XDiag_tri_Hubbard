@@ -1,0 +1,54 @@
+schema_version = 1
+name = "N12_coarse_observables"
+
+[cluster]
+Lx = 3
+Ly = 4
+N = 12
+nup = 6
+ndn = 6
+
+[trajectory]
+parameter = "U_over_t"
+values = [
+  6.0, 6.5, 7.0, 7.5, 8.0, 8.5, 9.0, 9.5, 10.0,
+  10.5, 11.0, 11.5, 12.0, 12.5, 13.0, 13.5, 14.0,
+]
+t = 1.0
+
+[sectors]
+selection = "all_inequivalent_momentum_stars_with_C2_little_groups"
+expected_count = 9
+
+[solver]
+algorithm = "eigs_lobpcg"
+operator_mode = "csr32"
+neigenvalues = 6
+guard_eigenvalues = 2
+precision = 1.0e-10
+residual_acceptance_limit = 1.0e-8
+orthogonality_tolerance = 1.0e-8
+max_iterations = 1000
+random_seed = 43
+retry_count = 3
+retry_seed_stride = 104729
+save_eigenvectors = false
+
+[observables]
+# Production-sector index of the known ground block at each coarse U/t point.
+ground_sector_indices = [1, 1, 6, 6, 6, 6, 6, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+measure_all_levels = [
+  "double_occupancy_per_site",
+  "spin_displacement_correlation",
+  "charge_connected_displacement_correlation",
+  "chirality_mean_by_sublattice",
+]
+measure_ground_level = ["chirality_structure_factor_in_separate_17_task_array"]
+reference_root = "data/raw/N12/coarse"
+
+[output]
+format = "JLD2"
+schema_version = 1
+root = "data/raw/N12/observables"
+one_file_per_sector_and_parameter = true
+overwrite = false

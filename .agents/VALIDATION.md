@@ -25,7 +25,7 @@ Updated: 2026-09-21
 - [x] Multilevel Lanczos was explicitly rejected; guarded LOBPCG passes residual and
   orthogonality gates on the largest block at `U/t=8`.
 
-The compute-node suite passes 46/46 tests. The direct `HubbardU` convention
+The compute-node suite passes 58/58 tests. The direct `HubbardU` convention
 was independently checked on the complete two-site `(Nup,Ndn)=(1,1)` basis.
 An independent fermionic bit-basis implementation verifies numerical commutators
 with `Tx`, `Ty`, and `C2` on a six-site torus to `1e-13`, and its complete Hubbard
@@ -90,3 +90,23 @@ spectrum agrees with XDiag to `1e-11`.
 - XDiag's one-state Lanczos/`eig0` route reported convergence with an explicit
   residual `2.45e-5` at `(0,0), U/t=6.6` and was rejected. The guarded LOBPCG
   result passed the declared residual gate.
+
+## Completed observable validation
+
+- Array job 3329636 produced all 153 six-level observable records. Nine records
+  rejected their first 1000-iteration seed and converged with the configured retry
+  seed; no failed attempt was accepted as data.
+- Corrected two-sublattice chirality array job 3330406 produced all 17 ground
+  records. The earlier 17 records are retained recoverably under
+  `.scratch/ground_chirality_legacy_3329680` and are ignored by production tools.
+- The validator found exactly 170 expected records and no unexpected raw files.
+- Maximum explicit residual: `8.59e-9`; maximum orthogonality error: `2.89e-15`;
+  maximum difference from the trusted coarse energies: `3.02e-14 t`.
+- All chirality sublattice Gram matrices are Hermitian and positive semidefinite
+  within `1e-8`; the 12 allowed spin and charge structure factors pass positivity
+  and reality checks.
+- Direct matrix tests verify local scalar-chirality Hermiticity,
+  `chi(q)^dagger=chi(-q)`, and equal `+/-q` norm in a time-reversal-invariant test
+  vector.
+- The plotting code verifies that its two-sublattice Fourier interpolation exactly
+  reproduces every allowed chirality momentum value before drawing a heatmap.

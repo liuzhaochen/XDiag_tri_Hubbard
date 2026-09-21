@@ -46,3 +46,23 @@ srun --ntasks=1 --immediate=60 -p test --time=00:15:00 --cpus-per-task=1 \
 
 The portable raw and processed schemas are documented in
 [`docs/data_format.md`](docs/data_format.md).
+
+The validated coarse-grid observable workflow uses two arrays: one for all six
+retained states in every block and one for the ground-state two-sublattice
+chirality structure factor:
+
+```bash
+sbatch slurm/observable_scan.sbatch
+sbatch slurm/ground_chirality.sbatch
+```
+
+Aggregate only after all 170 raw records exist:
+
+```bash
+srun --ntasks=1 --immediate=60 -p test --time=00:15:00 --cpus-per-task=1 \
+  julia --project=. --startup-file=no scripts/summarize_observables.jl \
+  config/scan_observables.toml data/processed/N12/observables_summary.jld2
+```
+
+Plot commands and the distinction between exact allowed-momentum data and
+continuous Fourier visualization are documented in [`plots/README.md`](plots/README.md).
