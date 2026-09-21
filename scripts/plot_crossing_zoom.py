@@ -46,7 +46,7 @@ def main():
         axis.plot(u_values[window], delta[window], "o-", color="#7A3E9D", linewidth=1.5)
         axis.set_xlabel(r"$U/t$")
         axis.grid(alpha=0.22, linewidth=0.6)
-    axes[0].set_ylabel(r"$[E_{(1,0)}-E_{(0,0),C_2=+}]/t$")
+    axes[0].set_ylabel(r"$[E_{(1,0)}-E_{\Gamma(A)}]/t$")
     figure.suptitle("3x4 triangular Hubbard: refined ground-branch crossings")
     args.output_base.parent.mkdir(parents=True, exist_ok=True)
     figure.savefig(args.output_base.with_suffix(".pdf"))

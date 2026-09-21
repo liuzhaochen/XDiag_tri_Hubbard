@@ -8,7 +8,8 @@
 - [x] Validate translations, `C2`, momentum stars, and little groups.
 - [x] Construct XDiag `Electron(12,6,6,representation)` blocks.
 - [x] Verify translation-sector dimensions reconstruct the raw dimension `853776`.
-- [x] Verify `C2=+/-` dimensions reconstruct translation-only `(0,0)` and `(0,2)`.
+- [x] Verify the `A/B` little-group irreps reconstruct translation-only `Gamma`
+  and `M2` blocks.
 - [x] Implement the Hubbard Hamiltonian and validate it against an independent
   fermionic bit-basis construction, including numerical symmetry commutators.
 - [x] Reconstruct a small-cluster full spectrum from symmetry-resolved spectra.
@@ -31,7 +32,8 @@
 
 - The 12-site cluster is the only active cluster.
 - Calculate seven inequivalent momentum stars, not all twelve momenta.
-- Resolve `C2=+/-` only at `(0,0)` and `(0,2)`.
+- Resolve the `C2` little-group irreps `A/B` only at `Gamma=(0,0)` and
+  `M2=(0,2)`.
 - Store compact JLD2 records; do not persist wavefunctions during the initial scan.
 - One Slurm-array task owns one `(sector, U/t)` result.
 - A result is accepted only after its solver diagnostics pass declared thresholds.

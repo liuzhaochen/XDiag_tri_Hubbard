@@ -13,8 +13,11 @@ def key_from_row(row):
 
 def label(key):
     nx, ny, parity = key
-    suffix = "" if parity == 0 else f",C2={'+' if parity > 0 else '-'}"
-    return f"({nx},{ny}{suffix})"
+    if parity != 0:
+        irrep = "A" if parity > 0 else "B"
+        momentum = "Gamma" if (nx, ny) == (0, 0) else "M2"
+        return f"{momentum}({irrep})"
+    return f"({nx},{ny})"
 
 
 def main():

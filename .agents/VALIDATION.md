@@ -18,7 +18,8 @@ Updated: 2026-09-21
 - [x] Julia 1.13.0 and XDiag 0.5.1 recorded from a compute node.
 - [x] All 12 translation-block dimensions sum to `binomial(12,6)^2 = 853776`.
 - [x] Star-weighted dimensions of the seven representatives give the same total.
-- [x] `C2=+/-` dimensions sum to the translation-only dimension at `(0,0)` and `(0,2)`.
+- [x] `A/B` little-group dimensions sum to the translation-only dimension at
+  `Gamma` and `M2`.
 - [x] A complete six-site Hubbard spectrum agrees with the union of all translation
   blocks at `U/t=3.7` to absolute tolerance `1e-11`.
 - [x] All five partner pairs have matching six-level spectra at `U/t=6,8,12`.
@@ -49,7 +50,7 @@ spectrum agrees with XDiag to `1e-11`.
 - All five `k <-> -k` pairs agree for six low-energy levels; the largest absolute
   discrepancy is `1.95e-14 t`.
 - At `(0,0)` and `(0,2)`, the first six translation-only levels agree with the
-  sorted union of the `C2=+/-` levels at all three couplings, with the same
+  sorted union of the `A/B` levels at all three couplings, with the same
   `1.95e-14 t` worst-case scale.
 - Task elapsed times were 8:43--14:10 and peak RSS was 588,664 KiB.
 
@@ -69,7 +70,7 @@ spectrum agrees with XDiag to `1e-11`.
 ## Completed dense crossing scan
 
 - Slurm array job 3325410 completed all 36 targeted records in the
-  `(0,0,C2=+)` and `(1,0)` blocks.
+  `Gamma(A)` and `(1,0)` blocks.
 - The validator found exactly 36 records with no unexpected files.
 - Maximum reported residual: `1.49e-10`; maximum independently recomputed residual:
   `1.49e-10`; maximum eigenvector orthogonality error: `2.89e-15`.
@@ -110,3 +111,7 @@ spectrum agrees with XDiag to `1e-11`.
   vector.
 - The plotting code verifies that its two-sublattice Fourier interpolation exactly
   reproduces every allowed chirality momentum value before drawing a heatmap.
+- Post-processing revision: spectrum plots use `Gamma(A/B)` and `M2(A/B)` irrep
+  labels; observable plots show the three `M` representatives separately and only
+  fixed-momentum chirality correlations. The extended-zone heatmap PDF is 167 KiB
+  after reducing the mesh to `111 x 111` and rasterizing it (previously about 8 MiB).

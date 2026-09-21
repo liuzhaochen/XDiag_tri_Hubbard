@@ -12,7 +12,8 @@
 - The surviving point group must be derived from triangular-lattice `D6`, not inserted
   as a rectangular-lattice assumption.
 - Production uses the seven momentum-star representatives specified in `prompt.md`.
-- `(0,0)` and `(0,2)` are additionally resolved by `C2` parity.
+- `Gamma=(0,0)` and `M2=(0,2)` are additionally resolved into the `A/B`
+  irreps of their `C2` little group.
 - The initial coarse grid is `U/t = 6:0.5:14`, with six physical levels requested
   from every block.
 - Numerical results will use portable plain-container JLD2 records and atomic writes.
@@ -37,7 +38,7 @@
   crossing brackets nor linear interpolation are presented as thermodynamic phase
   boundaries or as a reproduction of iDMRG.
 - The two absolute-ground crossings are refined only in the competing
-  `(0,0,C2=+)` and `(1,0)` blocks. Other low-lying crossings remain explicit
+  `Gamma(A)` and `(1,0)` blocks. Other low-lying crossings remain explicit
   candidates for discussion before further targeted work.
 - The reader-facing scientific narrative is maintained in
   `docs/physical_report.md`; `.agents` remains the compact operational ledger.
@@ -56,3 +57,12 @@
 - Do not label the `(1,0)/(2,0)` region a CSL from this cluster: projected uniform
   chirality is numerically zero, and finite chirality fluctuations plus a momentum
   doublet are insufficient CSL diagnostics.
+- Present self-conjugate sectors by professional little-group irreps:
+  `Gamma(A/B)` and `M2(A/B)`, where `A/B` have `C2` characters `+1/-1`.
+- Ground-state plots show the three cluster `M` representatives separately;
+  do not average them into an ambiguous `mean Mcl` on this anisotropic torus.
+- Do not plot projected uniform chirality for isolated singlets, and do not use
+  `max_q Cchi(q)` as an order diagnostic. Show fixed-momentum connected chirality
+  fluctuations at `Gamma`, `Kcl`, and `M2` instead.
+- Momentum heatmaps use a lower-resolution extended-zone view with allowed-point
+  replicas and a dashed first-BZ boundary; the heatmap mesh is rasterized in PDF.

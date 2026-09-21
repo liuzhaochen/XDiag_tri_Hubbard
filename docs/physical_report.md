@@ -44,16 +44,18 @@ C_2:(x,y)\mapsto(-x,-y),\qquad
 \]
 
 Thus the 12 translation momenta form seven `k <-> -k` stars. We diagonalize one
-representative of each star. Only the self-conjugate momenta `(0,0)` and `(0,2)`
-have an additional one-dimensional little-group label `C2=+/-`.
+representative of each star. Only the self-conjugate momenta `Gamma=(0,0)` and
+`M2=(0,2)` have the little co-group `C2`. We label its one-dimensional irreps
+`A` and `B`, with `C2` characters `+1` and `-1`, respectively. These are irreps
+of the surviving cluster little group, not irreps of the full triangular `D6`.
 
 | computed block | symmetry-related partner | dimension |
 |---|---|---:|
-| `(0,0), C2=-` | self | 35,494 |
-| `(0,0), C2=+` | self | 35,694 |
+| `Gamma(B)` | self | 35,494 |
+| `Gamma(A)` | self | 35,694 |
 | `(0,1)` | `(0,3)` | 71,120 |
-| `(0,2), C2=-` | self | 35,694 |
-| `(0,2), C2=+` | self | 35,494 |
+| `M2(B)` | self | 35,694 |
+| `M2(A)` | self | 35,494 |
 | `(1,0)` | `(2,0)` | 71,178 |
 | `(1,1)` | `(2,3)` | 71,112 |
 | `(1,2)` | `(2,2)` | 71,178 |
@@ -71,13 +73,13 @@ largest explicit residual is `8.59e-9` and the largest orthogonality error is
 `3.00e-15`.
 
 The two ground-branch crossings were subsequently sampled every `0.05` in the
-two relevant windows, using only `(0,0,C2=+)` and `(1,0)`. All 36 dense records
+two relevant windows, using only `Gamma(A)` and `(1,0)`. All 36 dense records
 passed; their largest explicit residual is `1.49e-10`.
 
 Independent validation includes exact geometry/group tests, reconstruction of a
 complete six-site spectrum from momentum blocks, explicit fermionic-matrix
 comparisons, all five `k <-> -k` partner checks, and reconstruction of the
-translation-only spectra from both `C2` parities.
+translation-only spectra from both `A/B` little-group irreps.
 
 The observable rerun recomputed all six retained states in all 153 coarse-grid
 blocks. Every spectrum agrees with the original production energy to within
@@ -107,7 +109,8 @@ The conventional triangular-lattice corner `K=(-1/3,1/3)` is not an allowed
 momentum of this torus. Plots use the closest allowed point
 `Kcl=(-1/3,1/4)`, whose translation-sector label is `(nx,ny)=(2,1)`. Of the
 three `M` representatives, `M2=(0,-1/2)` is exactly allowed; the other two are
-represented by their closest cluster points. The cluster schematic explicitly
+represented by `M1cl=(1/3,0)` and `M3cl=(1/3,1/2)`. Their sector labels are
+`(1,0)`, `(0,2)`, and `(1,2)`, respectively. The cluster schematic explicitly
 shows all 12 allowed momenta and these choices.
 
 Scalar chirality is
@@ -118,10 +121,23 @@ Scalar chirality is
 \]
 
 with all 24 elementary up/down triangles oriented counterclockwise. The
-structure factor is normalized per triangle. Its implementation retains the
-full `2 x 2` Gram matrix of the up/down-triangle Fourier operators, including
-their distinct intra-cell centers. This is necessary to fold momenta and make
-the continuous first-Brillouin-zone visualization without dropping the
+connected structure factor is normalized per triangle:
+
+\[
+C_\chi(\mathbf q)=\frac{1}{N_\triangle}
+\left\langle
+\left(\sum_\triangle e^{i\mathbf q\cdot\mathbf r_\triangle}\chi_\triangle\right)^\dagger
+\left(\sum_\triangle e^{i\mathbf q\cdot\mathbf r_\triangle}\chi_\triangle\right)
+\right\rangle
+-N_\triangle|\bar\chi|^2\delta_{\mathbf q,0},
+\quad
+\bar\chi=\frac{1}{N_\triangle}\sum_\triangle\langle\chi_\triangle\rangle,
+\]
+
+where `Ntriangle=24`. The subtraction affects only `Gamma`. The implementation
+retains the full `2 x 2` Gram matrix of the up/down-triangle Fourier operators,
+including their distinct intra-cell centers. This is necessary to fold momenta
+and make the continuous momentum-space visualization without dropping the
 two-sublattice form factor. Each allowed-momentum Gram matrix is checked to be
 Hermitian and positive semidefinite.
 
@@ -138,13 +154,13 @@ dimensional.
 ### Ground branch on `Ky=0`
 
 Two crossings occur between different symmetry blocks,
-`(0,0,C2=+)` and `(1,0)`. Because the states have different momentum quantum
+`Gamma(A)` and `(1,0)`. Because the states have different momentum quantum
 numbers, these are symmetry-allowed exact crossings on this finite cluster.
 
 | sampled crossing bracket | lower block to the left | lower block to the right |
 |---|---|---|
-| `6.60 < U/t < 6.65` | `(0,0,C2=+)` | `(1,0)` |
-| `9.30 < U/t < 9.35` | `(1,0)` | `(0,0,C2=+)` |
+| `6.60 < U/t < 6.65` | `Gamma(A)` | `(1,0)` |
+| `9.30 < U/t < 9.35` | `(1,0)` | `Gamma(A)` |
 
 Linear interpolation of the energy difference gives `U/t ~ 6.6281` and
 `U/t ~ 9.3124`. These numbers are plot guides only; the actual ED resolution is
@@ -177,7 +193,7 @@ level is allowed on this non-bipartite, low-symmetry finite torus.
 
 ### Other `Ky=0` crossings
 
-The lowest `(0,0,C2=-)` and `(1,0)` branches also exchange order in the coarse
+The lowest `Gamma(B)` and `(1,0)` branches also exchange order in the coarse
 brackets `6.0--6.5` and `13.0--13.5`. The first is especially low lying (about
 `0.007 t` above the absolute ground near the crossing) but is not itself an
 absolute-ground crossing. Further crossings occur among higher retained levels;
@@ -186,7 +202,7 @@ they are visible in the dedicated `Ky=0` spectrum plot.
 ### `Ky=pi` crossings
 
 There is no absolute-ground crossing on the `Ky=pi` line. There is, however, a
-notably low crossing between the lowest `(0,2,C2=-)` and `(1,2)` branches in the
+notably low crossing between the lowest `M2(B)` and `(1,2)` branches in the
 coarse bracket `9.5--10.0`. Both lie only about `0.01--0.02 t` above the absolute
 ground at the bracket endpoints. Crossings among higher retained `Ky=pi` levels
 also occur; the clearest coarse brackets include `8.0--8.5`, `8.5--9.0`,
@@ -196,7 +212,7 @@ also occur; the clearest coarse brackets include `8.0--8.5`, `8.5--9.0`,
 ### Other low-energy rearrangements
 
 The full set of block-lowest branches contains additional crossings involving
-`(0,0,C2=-)`, `(0,1)`, `(0,2,C2=-)`, `(1,1)`, `(1,2)`, and `(1,3)`. Several
+`Gamma(B)`, `(0,1)`, `M2(B)`, `(1,1)`, `(1,2)`, and `(1,3)`. Several
 cluster near `U/t ~ 8.5--10`, where many distinct irreps lie close together.
 This is a useful finite-size spectral observation, but the coarse scan alone does
 not justify selecting every visual intersection for refinement.
@@ -213,16 +229,22 @@ crossing from a rapid rearrangement.
 The double occupancy decreases from `0.124682` at `U/t=6` to `0.021494` at
 `U/t=14`. The first momentum-changing ground crossing produces only a modest
 observable change. The second produces a much clearer branch switch: the
-`Gamma,C2=+` branch has stronger `Kcl` spin correlations and weaker `M2`
+`Gamma(A)` branch has stronger `Kcl` spin correlations and weaker `M2`
 correlations than the `(1,0)` branch.
+
+An earlier figure used `mean Mcl`, the arithmetic mean of the three values at
+`M1cl`, exact `M2`, and `M3cl`, with a shaded minimum-to-maximum range. Because
+the `3 x 4` torus does not preserve the symmetry relating the three continuum
+`M` points, that average hid meaningful cluster anisotropy. The revised figure
+shows all three curves separately.
 
 | `U/t` | ground block | `D` | `S(Kcl)` | `S(M2)` | `N(Kcl)` |
 |---:|---|---:|---:|---:|---:|
-| 6.0 | `(0,0,C2=+)` | 0.124682 | 0.811082 | 0.756704 | 0.300860 |
+| 6.0 | `Gamma(A)` | 0.124682 | 0.811082 | 0.756704 | 0.300860 |
 | 8.0 | `(1,0)` | 0.080198 | 1.017817 | 1.067291 | 0.207080 |
 | 9.0 | `(1,0)` | 0.061089 | 1.123415 | 1.199851 | 0.161851 |
-| 9.5 | `(0,0,C2=+)` | 0.046730 | 1.548072 | 1.031221 | 0.130959 |
-| 14.0 | `(0,0,C2=+)` | 0.021494 | 2.016901 | 0.778196 | 0.065011 |
+| 9.5 | `Gamma(A)` | 0.046730 | 1.548072 | 1.031221 | 0.130959 |
+| 14.0 | `Gamma(A)` | 0.021494 | 2.016901 | 0.778196 | 0.065011 |
 
 At `U/t=8`, `S(Kcl)` and `S(M2)` remain comparable. At `U/t=14`, the much
 larger `S(Kcl)` is consistent with increasingly strong finite-cluster
@@ -243,35 +265,44 @@ time-reversal partner in `(2,0)`. Globally, several other irreps lie below
 
 The low `Ky=pi` crossing is also visible in observables. At `U/t=9.5`, the
 lowest `(1,2)` state lies `0.013858 t` above the ground and just below the
-`(0,2,C2=-)` state at `0.014963 t`; at `U/t=10`, their gaps are respectively
+`M2(B)` state at `0.014963 t`; at `U/t=10`, their gaps are respectively
 `0.023205 t` and `0.010907 t`. The states have clearly different spin patterns:
 at `U/t=10`, `(S(Kcl),S(M2))` is `(0.9103,0.8264)` for `(1,2)` and
-`(1.4638,1.7243)` for `(0,2,C2=-)`.
+`(1.4638,1.7243)` for `M2(B)`.
 
 ### Chirality diagnostics and the CSL question
 
-No sampled ground state has a resolvable uniform scalar chirality. The projected
-value is zero in the `Gamma` ground states and at most `2.1e-13` in the
-`(1,0)/(2,0)` doublet. Across all 918 retained symmetry eigenstates, the largest
-absolute uniform chirality expectation is `1.33e-11`, at the scale of numerical
-noise.
+No sampled ground state has a resolvable uniform scalar chirality. Projection is
+only a useful statement in the degenerate `(1,0)/(2,0)` ground space, where the
+two eigenvalues have magnitude at most `2.1e-13`. For an isolated `Gamma(A)`
+singlet there is no nontrivial projected subspace: it is simply the ordinary
+expectation value, which vanishes by symmetry. For this reason projected
+`|chibar|` is no longer included as a ground-state plot curve. Across all 918
+retained symmetry eigenstates, the largest absolute uniform chirality expectation
+is `1.33e-11`, at the scale of numerical noise.
 
-The connected chirality structure factor is nonzero, as expected for quantum
-fluctuations, but it does not peak uniformly in the intermediate momentum
-sector. Representative values are:
+The connected chirality structure factor is nonzero because it measures the
+variance and spatial correlations of chirality, not its expectation value.
+Representative fixed-momentum values are:
 
-| `U/t` | ground block | `Cchi(Gamma)` | `Cchi(Kcl)` | maximum on allowed grid |
+| `U/t` | ground block | `Cchi(Gamma)` | `Cchi(Kcl)` | `Cchi(M2)` |
 |---:|---|---:|---:|---:|
-| 6.0 | `(0,0,C2=+)` | 0.085970 | 0.055455 | 0.085970 |
-| 8.0 | `(1,0)` | 0.078778 | 0.074439 | 0.175952 |
-| 9.0 | `(1,0)` | 0.089739 | 0.078331 | 0.234335 |
-| 9.5 | `(0,0,C2=+)` | 0.264839 | 0.076022 | 0.264839 |
-| 14.0 | `(0,0,C2=+)` | 0.328275 | 0.065763 | 0.328275 |
+| 6.0 | `Gamma(A)` | 0.085970 | 0.055455 | 0.085365 |
+| 8.0 | `(1,0)` | 0.078778 | 0.074439 | 0.080555 |
+| 9.0 | `(1,0)` | 0.089739 | 0.078331 | 0.080416 |
+| 9.5 | `Gamma(A)` | 0.264839 | 0.076022 | 0.166102 |
+| 14.0 | `Gamma(A)` | 0.328275 | 0.065763 | 0.193415 |
 
-For the displayed `U/t=8`, `(1,0)` representative, the maximum is at the
-allowed first-zone point `(nx,ny)=(2,2)`, not at `Gamma` or `Kcl`. Its
-time-reversal partner has the momentum-reflected map. At `U/t=14`, the maximum
-is at `Gamma` and the map is inversion symmetric.
+The growth of `Cchi(Gamma)` above the second crossing does not imply a finite
+chiral order parameter. In the isolated time-reversal-even `Gamma(A)` singlet,
+`<chibar>=0`, while `Cchi(Gamma)` is proportional to
+`<chibar^2>-<chibar>^2` and may be large. Increasing `U/t` suppresses double
+occupancy and forms stronger local moments, which can enhance multi-spin
+fluctuations even when time reversal is unbroken. Establishing chiral order would
+require size scaling of the connected peak together with a nonzero projected
+order parameter in a symmetry-breaking manifold. The former is unavailable on
+one cluster and the latter is absent here. The displayed `U/t=8`, `(1,0)` map is
+state-specific; its time-reversal partner is reflected under `q -> -q`.
 
 These data do **not** justify identifying the `(1,0)` ground region as a chiral
 spin liquid. A momentum doublet and finite chirality fluctuations are not, by
@@ -299,10 +330,11 @@ The generated plots are:
   structure factors, and chirality diagnostics over the 17-point grid;
 - `plots/N12/low_lying_state_observables.{pdf,png}`: all retained states within
   `0.6 t` of the ground, colored by observables;
-- `plots/N12/structure_factor_heatmaps.{pdf,png}`: continuous Fourier
-  visualizations for `U/t=8`, `(1,0)` and `U/t=14`, `Gamma,C2=+`; white dots
-  are the 12 actually available momenta. Between those dots the color field is
-  a finite Fourier interpolation, not additional ED momentum resolution.
+- `plots/N12/structure_factor_heatmaps.{pdf,png}`: lower-resolution extended-zone
+  Fourier visualizations for `U/t=8`, `(1,0)` and `U/t=14`, `Gamma(A)`. White
+  dots are allowed-momentum replicas and the white dashed hexagon is the first-BZ
+  boundary. Between the dots the color field is a finite Fourier interpolation,
+  not additional ED momentum resolution.
 
 The corresponding spectrum tables are `coarse_summary.csv` and
 `dense_summary.csv`. Observable products are `observables_summary_states.csv`,

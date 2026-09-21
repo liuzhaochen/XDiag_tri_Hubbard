@@ -67,7 +67,7 @@ for momentum in (MomentumSector(0, 0), MomentumSector(0, 2))
     odd_values = low_energies(momentum; parity=-1)
     reconstructed = sort(vcat(even_values, odd_values))[1:length(translation_values)]
     difference = maximum(abs, translation_values - reconstructed)
-    @printf("  (%d,%d) translation <-> C2=+/- union: max |dE| = %.3e\n",
+    @printf("  (%d,%d) translation <-> A/B irrep union: max |dE| = %.3e\n",
             momentum.nx, momentum.ny, difference)
     difference <= 1e-8 || error("C2-resolved spectrum mismatch")
     flush(stdout)

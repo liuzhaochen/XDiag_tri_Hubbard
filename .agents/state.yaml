@@ -14,7 +14,7 @@ scan:
   coarse_u_over_t: {start: 6.0, stop: 14.0, step: 0.5}
   levels_per_block: 6
   production_momentum_stars: 7
-  c2_resolved_momenta: [[0, 0], [0, 2]]
+  little_group_irreps: {Gamma: [A, B], M2: [A, B]}
 current_gate: discuss_interpretation_and_optional_next_diagnostics
 next_action: review_crossings_observables_and_decide_on_twists_overlaps_or_4x4
 jobs:

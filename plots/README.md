@@ -38,5 +38,6 @@ python3 scripts/plot_observables.py \
   plots/N12
 ```
 
-The heatmap colors are finite Fourier interpolations. The white dots mark the 12
-momenta at which the finite torus supplies independent values.
+The heatmap colors are lower-resolution finite Fourier interpolations over an
+extended momentum region. White dots show allowed-momentum replicas and the white
+dashed hexagon marks the first Brillouin-zone boundary.

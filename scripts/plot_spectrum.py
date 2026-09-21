@@ -26,8 +26,11 @@ COLORS = {
 
 def sector_label(key):
     nx, ny, parity = key
-    suffix = "" if parity == 0 else f", C2={'+' if parity > 0 else '-'}"
-    return f"({nx},{ny}{suffix})"
+    if parity != 0:
+        irrep = "A" if parity > 0 else "B"
+        momentum = r"\Gamma" if (nx, ny) == (0, 0) else r"M_2"
+        return rf"${momentum}({irrep})$"
+    return rf"$({nx},{ny})$"
 
 
 def sector_keys(data):

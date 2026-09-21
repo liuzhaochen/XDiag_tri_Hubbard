@@ -18,7 +18,7 @@ def load_csv(path):
 def save(figure, output_base):
     output_base.parent.mkdir(parents=True, exist_ok=True)
     figure.savefig(output_base.with_suffix(".pdf"))
-    figure.savefig(output_base.with_suffix(".png"), dpi=220)
+    figure.savefig(output_base.with_suffix(".png"), dpi=180)
     plt.close(figure)
 
 
@@ -35,33 +35,29 @@ def plot_ground(data, output_base):
     axes[0, 0].plot(u, data["double_occupancy"], "o-", color="#0072B2")
     axes[0, 0].set_ylabel(r"$\langle n_\uparrow n_\downarrow\rangle$")
 
-    spin_m = np.vstack([data["spin_M1cl"], data["spin_M2"], data["spin_M3cl"]])
     axes[0, 1].plot(u, data["spin_Gamma"], "o-", label=r"$\Gamma$")
     axes[0, 1].plot(u, data["spin_Kcl"], "o-", label=r"$K_{\rm cl}$")
-    axes[0, 1].plot(u, np.mean(spin_m, axis=0), "o-", label=r"mean $M_{\rm cl}$")
-    axes[0, 1].fill_between(u, np.min(spin_m, axis=0), np.max(spin_m, axis=0),
-                            color="#999999", alpha=0.18, label=r"$M_{\rm cl}$ range")
+    axes[0, 1].plot(u, data["spin_M1cl"], "o-", label=r"$M_{1,\rm cl}$")
+    axes[0, 1].plot(u, data["spin_M2"], "o-", label=r"$M_2$")
+    axes[0, 1].plot(u, data["spin_M3cl"], "o-", label=r"$M_{3,\rm cl}$")
     axes[0, 1].set_ylabel(r"$S(\mathbf{q})$")
-    axes[0, 1].legend(frameon=False, fontsize=8)
+    axes[0, 1].legend(frameon=False, fontsize=7.5, ncol=2)
 
-    charge_m = np.vstack([data["charge_M1cl"], data["charge_M2"], data["charge_M3cl"]])
     axes[1, 0].plot(u, data["charge_Gamma"], "o-", label=r"$\Gamma$")
     axes[1, 0].plot(u, data["charge_Kcl"], "o-", label=r"$K_{\rm cl}$")
-    axes[1, 0].plot(u, np.mean(charge_m, axis=0), "o-", label=r"mean $M_{\rm cl}$")
-    axes[1, 0].fill_between(u, np.min(charge_m, axis=0), np.max(charge_m, axis=0),
-                            color="#999999", alpha=0.18)
+    axes[1, 0].plot(u, data["charge_M1cl"], "o-", label=r"$M_{1,\rm cl}$")
+    axes[1, 0].plot(u, data["charge_M2"], "o-", label=r"$M_2$")
+    axes[1, 0].plot(u, data["charge_M3cl"], "o-", label=r"$M_{3,\rm cl}$")
     axes[1, 0].set_ylabel(r"$N(\mathbf{q})$")
-    axes[1, 0].legend(frameon=False, fontsize=8)
+    axes[1, 0].legend(frameon=False, fontsize=7.5, ncol=2)
 
-    axes[1, 1].plot(u, data["chirality_projected_abs"], "o-",
-                    label=r"projected $|\bar\chi|$")
     axes[1, 1].plot(u, data["chirality_sf_Gamma"], "o-",
-                    label=r"$C_\chi(\Gamma)$")
+                    label=r"$C_\chi^{\rm conn}(\Gamma)$")
     axes[1, 1].plot(u, data["chirality_sf_Kcl"], "o-",
                     label=r"$C_\chi(K_{\rm cl})$")
-    axes[1, 1].plot(u, data["chirality_sf_max"], "o-",
-                    label=r"max allowed $C_\chi$")
-    axes[1, 1].set_ylabel("chirality diagnostics")
+    axes[1, 1].plot(u, data["chirality_sf_M2"], "o-",
+                    label=r"$C_\chi(M_2)$")
+    axes[1, 1].set_ylabel(r"connected chirality fluctuations $C_\chi(\mathbf{q})$")
     axes[1, 1].legend(frameon=False, fontsize=8)
 
     for axis in axes.flat:
@@ -79,12 +75,12 @@ def plot_low_states(data, output_base):
         ("double_occupancy", r"$\langle n_\uparrow n_\downarrow\rangle$"),
         ("spin_Kcl", r"$S(K_{\rm cl})$"),
         ("spin_M2", r"$S(M_2)$"),
-        ("chirality_mean", r"$|\bar\chi|$"),
+        ("charge_Kcl", r"$N(K_{\rm cl})$"),
     ]
     figure, axes = plt.subplots(2, 2, figsize=(10.4, 7.4), constrained_layout=True,
                                 sharex=True, sharey=True)
     for axis, (field, label) in zip(axes.flat, quantities):
-        values = np.abs(selected[field]) if field == "chirality_mean" else selected[field]
+        values = selected[field]
         points = axis.scatter(selected["U_over_t"], selected["energy_minus_ground"],
                               c=values, cmap="viridis", s=24, edgecolors="none")
         figure.colorbar(points, ax=axis, label=label, shrink=0.88)
@@ -101,31 +97,40 @@ B2 = np.array([0.0, 4 * np.pi / np.sqrt(3)])
 BASIS = np.column_stack([B1, B2])
 
 
-def first_bz_grid(points=241):
-    x = np.linspace(-4.35, 4.35, points)
-    y = np.linspace(-3.75, 3.75, points)
+def extended_momentum_grid(points=111):
+    x = np.linspace(-2 * np.pi, 2 * np.pi, points)
+    y = np.linspace(-4 * np.pi / np.sqrt(3), 4 * np.pi / np.sqrt(3), points)
     xx, yy = np.meshgrid(x, y)
     cart = np.stack([xx, yy], axis=-1)
-    norm0 = np.sum(cart**2, axis=-1)
-    mask = np.ones(xx.shape, dtype=bool)
-    for m in range(-1, 2):
-        for n in range(-1, 2):
-            if m == 0 and n == 0:
-                continue
-            reciprocal = m * B1 + n * B2
-            mask &= norm0 <= np.sum((cart - reciprocal) ** 2, axis=-1) + 1e-10
     fractional = np.linalg.solve(BASIS, cart.reshape(-1, 2).T).T.reshape(points, points, 2)
-    return xx, yy, fractional[..., 0], fractional[..., 1], mask
+    return xx, yy, fractional[..., 0], fractional[..., 1]
 
 
-def fold_to_first_bz(q1, q2):
-    best = None
-    for m in range(-1, 2):
-        for n in range(-1, 2):
-            cart = BASIS @ np.array([q1 + m, q2 + n])
-            if best is None or np.dot(cart, cart) < np.dot(best, best):
-                best = cart
-    return best
+def first_bz_vertices():
+    return np.array([
+        [4 * np.pi / 3, 0.0],
+        [2 * np.pi / 3, 2 * np.pi / np.sqrt(3)],
+        [-2 * np.pi / 3, 2 * np.pi / np.sqrt(3)],
+        [-4 * np.pi / 3, 0.0],
+        [-2 * np.pi / 3, -2 * np.pi / np.sqrt(3)],
+        [2 * np.pi / 3, -2 * np.pi / np.sqrt(3)],
+        [4 * np.pi / 3, 0.0],
+    ])
+
+
+def allowed_momentum_replicas(x_limits, y_limits):
+    points = []
+    for nx in range(3):
+        for ny in range(4):
+            for shift_x in range(-2, 3):
+                for shift_y in range(-2, 3):
+                    cartesian = BASIS @ np.array([
+                        nx / 3 + shift_x, ny / 4 + shift_y
+                    ])
+                    if (x_limits[0] <= cartesian[0] <= x_limits[1]
+                            and y_limits[0] <= cartesian[1] <= y_limits[1]):
+                        points.append(cartesian)
+    return np.unique(np.round(points, decimals=12), axis=0)
 
 
 def evaluate_displacements(correlation, q1, q2):
@@ -198,15 +203,16 @@ def validate_chirality_interpolation(correlations, grid_rows, u_value):
 
 
 def plot_heatmaps(correlation_rows, chirality_rows, chirality_gram_rows, output_base):
-    xx, yy, q1, q2, mask = first_bz_grid()
-    allowed_cart = np.array([
-        fold_to_first_bz(nx / 3, ny / 4) for nx in range(3) for ny in range(4)
-    ])
+    xx, yy, q1, q2 = extended_momentum_grid()
+    x_limits = (float(np.min(xx)), float(np.max(xx)))
+    y_limits = (float(np.min(yy)), float(np.max(yy)))
+    allowed_cart = allowed_momentum_replicas(x_limits, y_limits)
+    bz = first_bz_vertices()
     selections = [("U8_k10", 8.0, r"$U/t=8$, $(1,0)$"),
-                  ("U14_Gamma", 14.0, r"$U/t=14$, $\Gamma,C_2=+$")]
-    figure, axes = plt.subplots(2, 3, figsize=(15.2, 8.2), constrained_layout=True)
+                  ("U14_Gamma", 14.0, r"$U/t=14$, $\Gamma(A)$")]
+    figure, axes = plt.subplots(2, 3, figsize=(13.2, 8.2), constrained_layout=True)
     figure.suptitle(
-        "Continuous Fourier visualization; dots are the 12 allowed momenta",
+        "Extended momentum space: dots are allowed momenta; dashed hexagon is the first BZ",
         fontsize=14,
     )
     for row_index, (tag, u_value, state_label) in enumerate(selections):
@@ -222,11 +228,15 @@ def plot_heatmaps(correlation_rows, chirality_rows, chirality_gram_rows, output_
         ]
         for column, (field, title) in enumerate(fields):
             axis = axes[row_index, column]
-            shown = np.where(mask, field, np.nan)
-            image = axis.pcolormesh(xx, yy, shown, shading="auto", cmap="magma")
-            axis.scatter(allowed_cart[:, 0], allowed_cart[:, 1], s=17,
+            image = axis.pcolormesh(
+                xx, yy, field, shading="auto", cmap="magma", rasterized=True
+            )
+            axis.plot(bz[:, 0], bz[:, 1], "w--", linewidth=1.1)
+            axis.scatter(allowed_cart[:, 0], allowed_cart[:, 1], s=10,
                          facecolors="white", edgecolors="black", linewidths=0.6)
             axis.set_aspect("equal")
+            axis.set_xlim(*x_limits)
+            axis.set_ylim(*y_limits)
             axis.set_xlabel(r"$q_x$")
             axis.set_ylabel(r"$q_y$")
             axis.set_title(f"{state_label}: {title}", fontsize=11)

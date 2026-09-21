@@ -19,7 +19,8 @@ Each raw file stores one `(symmetry block, U/t)` calculation under the JLD2 key
 - `provenance`: Julia/XDiag versions, git revision, and Slurm identifiers.
 
 `C2_parity=0` means that inversion is not in the momentum little group. It is not a
-physical parity eigenvalue.
+physical parity eigenvalue. User-facing reports translate the technical values
+`+1/-1` into the standard `A/B` irrep labels of the `C2` little group.
 
 Raw records are written atomically through a temporary file. Existing results are
 not overwritten by default.
