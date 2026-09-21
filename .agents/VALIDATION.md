@@ -75,3 +75,18 @@ spectrum agrees with XDiag to `1e-11`.
   `1.49e-10`; maximum eigenvector orthogonality error: `2.89e-15`.
 - Array task walltimes were 0:26--1:38 and maximum peak RSS was 557,180 KiB.
 - The two `0.05` crossing brackets are `6.60--6.65` and `9.30--9.35`.
+
+## Independent finite-momentum ground-state audit
+
+- All 12 translation-only momentum blocks were recomputed at
+  `U/t=6.60,6.65,8.00,9.30,9.35` with a new seed and one guarded state.
+- The `(1,0)` and `(2,0)` energies agree within `1.6e-14 t`; the maximum explicit
+  residual is `5.51e-9`.
+- The sign of `E(1,0)-E(0,0)` is respectively `+,-,-,-,+`, independently
+  reproducing both ground-branch brackets without `C2` resolution.
+- At `U/t=8`, `E(1,0)-E(0,0)=-0.033449734171 t`, well beyond numerical error.
+- An all-momentum `Sz=1` audit at `U/t=8` lies `0.077558948956 t` above the `Sz=0`
+  ground, excluding an `S>=1` assignment for the finite-momentum ground state.
+- XDiag's one-state Lanczos/`eig0` route reported convergence with an explicit
+  residual `2.45e-5` at `(0,0), U/t=6.6` and was rejected. The guarded LOBPCG
+  result passed the declared residual gate.

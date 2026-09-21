@@ -24,6 +24,7 @@ jobs:
   - {id: 3325410, purpose: dense_ground_crossings, status: completed}
 artifacts:
   - scripts/report_sector_dimensions.jl
+  - scripts/crosscheck_ground_momentum.jl
   - data/raw/N12/coarse/nx_0_ny_0_c2_p/u_06000.jld2
   - data/processed/N12/coarse_summary.jld2
   - data/processed/N12/coarse_summary.csv

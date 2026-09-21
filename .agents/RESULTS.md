@@ -41,6 +41,11 @@ are:
 The interpolated values are visual guides, not additional ED resolution and not
 thermodynamic transition estimates.
 
+An all-12-momentum translation-only audit independently confirmed both order
+reversals and the exact `(1,0)<->(2,0)` partner degeneracy. At `U/t=8`, the pair
+lies `0.033449734171 t` below the complete `(0,0)` block. A separate `Sz=1` scan
+lies `0.077558948956 t` above it, so the finite-momentum ground is a singlet.
+
 ## Other crossing candidates
 
 - The lowest `(0,0,C2=-)` and `(1,0)` branches cross in the coarse brackets

@@ -96,6 +96,31 @@ Linear interpolation of the energy difference gives `U/t ~ 6.6281` and
 `U/t ~ 9.3124`. These numbers are plot guides only; the actual ED resolution is
 the `0.05` bracket.
 
+An additional audit diagonalized all 12 translation momenta without `C2`
+resolution, using a new random seed and explicit residual checks. It independently
+reproduced both order reversals:
+
+| `U/t` | `E(0,0)` | `E(1,0)=E(2,0)` | `E(1,0)-E(0,0)` |
+|---:|---:|---:|---:|
+| 6.60 | -8.595121557329 | -8.594593337081 | +0.000528220248 |
+| 6.65 | -8.527904893136 | -8.528316662264 | -0.000411769128 |
+| 8.00 | -6.957821307096 | -6.991271041267 | -0.033449734171 |
+| 9.30 | -5.935517088312 | -5.936402816482 | -0.000885728169 |
+| 9.35 | -5.905634931836 | -5.902940274534 | +0.002694657302 |
+
+The `(1,0)` and `(2,0)` partner energies agree within `1.6e-14 t`; the largest
+explicit residual in this audit is `5.51e-9`. At `U/t=8`, a separate all-momentum
+`(Nup,Ndn)=(7,5)` calculation has minimum energy `-6.913712092311 t`, which is
+`0.077558948956 t` above the `(6,6)` ground. By spin SU(2), the finite-momentum
+ground is therefore consistent with total spin `S=0`, rather than an unnoticed
+higher-spin multiplet.
+
+The finite-momentum ground is a degenerate `k`/`-k` pair, not a unique complex
+state. Here `(1,0)` means translation eigenvalues
+`Tx=exp(i 2 pi/3)` and `Ty=1`; it should not be conflated with the conventional
+two-dimensional triangular-lattice `K` point. Such a momentum-changing ground
+level is allowed on this non-bipartite, low-symmetry finite torus.
+
 ### Other `Ky=0` crossings
 
 The lowest `(0,0,C2=-)` and `(1,0)` branches also exchange order in the coarse

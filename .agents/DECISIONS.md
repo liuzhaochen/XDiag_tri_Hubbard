@@ -41,3 +41,6 @@
   candidates for discussion before further targeted work.
 - The reader-facing scientific narrative is maintained in
   `docs/physical_report.md`; `.agents` remains the compact operational ledger.
+- Treat the intermediate ground as a twofold `(1,0)/(2,0)` momentum-star pair.
+  The label has `Tx=exp(+/- i 2 pi/3)` and `Ty=1` and is not identified with the
+  conventional two-dimensional triangular-lattice `K` point.
