@@ -10,6 +10,11 @@ os.environ.setdefault("MPLCONFIGDIR", "/tmp/xdiag_tri_hubbard_matplotlib")
 import matplotlib.pyplot as plt
 import numpy as np
 
+from plot_style import apply_plot_style
+
+
+apply_plot_style()
+
 
 A1 = np.array([1.0, 0.0])
 A2 = np.array([0.5, np.sqrt(3) / 2])
@@ -31,8 +36,43 @@ def folded_momentum(nx, ny):
     return min(candidates, key=lambda item: (round(item[0], 12), item[1], item[2]))[3]
 
 
+def displayed_momentum(nx, ny):
+    """Choose display representatives that keep the lower BZ region clear."""
+    momentum = folded_momentum(nx, ny)
+    if (nx, ny) == (0, 2):
+        momentum = momentum + B2
+    elif (nx, ny) == (2, 2):
+        momentum = momentum + B2
+    return momentum
+
+
 def plot_real_space(axis):
     directions = ((1, 0), (0, 1), (-1, 1))
+
+    # One shell of periodic images makes the boundary-crossing bonds explicit.
+    extended_sites = {
+        (x, y) for x in range(-1, 4) for y in range(-1, 5)
+    }
+    primary_sites = {
+        (x, y) for x in range(3) for y in range(4)
+    }
+    for x, y in sorted(extended_sites):
+        start = site_position(x, y)
+        for dx, dy in directions:
+            destination = (x + dx, y + dy)
+            if destination in extended_sites:
+                end = site_position(*destination)
+                axis.plot([start[0], end[0]], [start[1], end[1]],
+                          color="#D8D8D8", linewidth=0.75, zorder=0)
+
+    image_positions = np.asarray([
+        site_position(x, y)
+        for x, y in sorted(extended_sites - primary_sites)
+    ])
+    axis.scatter(image_positions[:, 0], image_positions[:, 1], s=20,
+                 facecolors="white", edgecolors="#B8B8B8", linewidths=0.7,
+                 zorder=1)
+
     for x in range(3):
         for y in range(4):
             start = site_position(x, y)
@@ -49,8 +89,17 @@ def plot_real_space(axis):
             position = site_position(x, y)
             positions.append(position)
             site = 1 + y + 4 * x
-            axis.text(position[0] + 0.055, position[1] + 0.07, str(site),
-                      fontsize=8, color="#222222", zorder=3)
+            if x == 0:
+                label_offset = np.array([0.0, -0.16])
+                horizontal_alignment = "center"
+                vertical_alignment = "top"
+            else:
+                label_offset = np.array([0.055, 0.07])
+                horizontal_alignment = "left"
+                vertical_alignment = "baseline"
+            axis.text(*(position + label_offset), str(site),
+                      fontsize=10, color="#222222", zorder=3,
+                      ha=horizontal_alignment, va=vertical_alignment)
     positions = np.asarray(positions)
     axis.scatter(positions[:, 0], positions[:, 1], s=42, color="#0072B2",
                  edgecolors="white", linewidths=0.7, zorder=2)
@@ -58,22 +107,22 @@ def plot_real_space(axis):
     corners = np.array([
         [0.0, 0.0], 3 * A1, 3 * A1 + 4 * A2, 4 * A2, [0.0, 0.0]
     ])
-    axis.plot(corners[:, 0], corners[:, 1], color="#D55E00", linewidth=2.0)
+    axis.plot(corners[:, 0], corners[:, 1], color="#292929", linewidth=1.8,
+              zorder=3)
     axis.annotate("", xy=3 * A1, xytext=np.zeros(2),
                   arrowprops=dict(arrowstyle="->", color="#D55E00", lw=1.5))
     axis.annotate("", xy=4 * A2, xytext=np.zeros(2),
                   arrowprops=dict(arrowstyle="->", color="#D55E00", lw=1.5))
-    axis.text(1.45, -0.25, r"$3\mathbf{a}_1$", color="#D55E00", ha="center")
-    axis.text(0.62, 1.88, r"$4\mathbf{a}_2$", color="#D55E00",
-              rotation=60, ha="center")
-    axis.text(2.5, 3.6, "opposite edges identified", fontsize=8.5,
-              color="#555555", ha="center")
+    axis.text(1.45, -0.25, r"$\mathbf{T}_1=3\mathbf{a}_1$",
+              color="#D55E00", ha="center", fontsize=11.5)
+    axis.text(0.48, 1.88, r"$\mathbf{T}_2=4\mathbf{a}_2$", color="#D55E00",
+              rotation=60, ha="center", fontsize=11.5)
     axis.set_aspect("equal")
-    axis.set_xlim(-0.35, 5.35)
-    axis.set_ylim(-0.42, 3.92)
-    axis.set_title(r"Real space: $3\times4$ triangular torus")
-    axis.set_xlabel(r"$x$")
-    axis.set_ylabel(r"$y$")
+    axis.set_xlim(-1.8, 5.75)
+    axis.set_ylim(-1.15, 4.35)
+    axis.axis("off")
+    axis.text(0.02, 0.98, "(a)", transform=axis.transAxes,
+              ha="left", va="top", fontsize=14, fontweight="bold")
 
 
 def plot_reciprocal_space(axis):
@@ -92,40 +141,56 @@ def plot_reciprocal_space(axis):
     labels = []
     for nx in range(3):
         for ny in range(4):
-            momenta.append(folded_momentum(nx, ny))
+            momenta.append(displayed_momentum(nx, ny))
             labels.append(f"({nx},{ny})")
     momenta = np.asarray(momenta)
     axis.scatter(momenta[:, 0], momenta[:, 1], s=47, color="#0072B2",
-                 edgecolors="white", linewidths=0.7, zorder=3,
-                 label="allowed cluster momenta")
+                 edgecolors="white", linewidths=0.7, zorder=3)
+
+    calculated_sectors = {
+        (0, 0), (0, 1), (0, 2),
+        (1, 0), (1, 1), (1, 2), (1, 3),
+    }
+    calculated_momenta = np.asarray([
+        displayed_momentum(nx, ny) for nx, ny in sorted(calculated_sectors)
+    ])
+    axis.scatter(calculated_momenta[:, 0], calculated_momenta[:, 1],
+                 marker="o", s=92, facecolors="none", edgecolors="#E69F00",
+                 linewidths=1.45, zorder=3.5, label="ED representatives")
+
     for position, label in zip(momenta, labels):
         offset_x = 0.08 if position[0] <= 0 else -0.08
         alignment = "left" if position[0] <= 0 else "right"
         offset_y = 0.09 if position[1] <= 0 else -0.09
         axis.text(position[0] + offset_x, position[1] + offset_y, label,
-                  fontsize=7.3, ha=alignment,
+                  fontsize=9.2, ha=alignment,
                   va="bottom" if position[1] <= 0 else "top")
 
     # Use the BZ images adjacent to the folded representatives highlighted below.
     exact_k = np.array([-2 * np.pi / 3, 2 * np.pi / np.sqrt(3)])
-    exact_m = folded_momentum(0, 2)
+    exact_m = displayed_momentum(0, 2)
     k_cluster = folded_momentum(2, 1)
     axis.scatter(*exact_k, marker="*", s=135, color="#D55E00", zorder=4,
-                 label=r"exact $K$")
+                 label=r"$K$")
     axis.scatter(*exact_m, marker="s", s=58, facecolors="none",
                  edgecolors="#009E73", linewidths=1.6, zorder=4,
-                 label=r"exact allowed $M_2$")
+                 label=r"$M_2$")
     axis.scatter(*k_cluster, marker="o", s=125, facecolors="none",
                  edgecolors="#CC79A7", linewidths=2.0, zorder=4,
-                 label=r"selected $K_{\rm cl}=(2,1)$")
+                 label=r"$K_{\rm cl}$")
 
     axis.set_aspect("equal")
-    axis.set_xlim(-4.65, 4.65)
-    axis.set_ylim(-4.1, 4.1)
-    axis.set_title("Reciprocal space: first Brillouin zone")
-    axis.set_xlabel(r"$q_x$")
-    axis.set_ylabel(r"$q_y$")
-    axis.legend(loc="upper right", frameon=False, fontsize=7.6)
+    axis.set_xlim(-4.65, 4.85)
+    axis.set_ylim(-4.1, 5.15)
+    axis.set_xticks([])
+    axis.set_yticks([])
+    for spine in axis.spines.values():
+        spine.set_visible(False)
+    axis.legend(loc="upper right", ncol=2, frameon=False, fontsize=9.4,
+                handletextpad=0.4, labelspacing=0.25, columnspacing=0.8,
+                borderaxespad=0.15)
+    axis.text(0.045, 0.94, "(b)", transform=axis.transAxes,
+              ha="left", va="top", fontsize=14, fontweight="bold")
 
 
 def main():
@@ -134,12 +199,15 @@ def main():
     args = parser.parse_args()
     args.output_directory.mkdir(parents=True, exist_ok=True)
 
-    figure, axes = plt.subplots(1, 2, figsize=(11.0, 4.8), constrained_layout=True)
+    # Render at the intended full-width Supplementary-page size so that text
+    # remains at its designed point size when included with width=\textwidth.
+    figure, axes = plt.subplots(1, 2, figsize=(7.1, 3.35), constrained_layout=True)
     plot_real_space(axes[0])
     plot_reciprocal_space(axes[1])
-    figure.suptitle("3x4 triangular-lattice cluster and its 12 allowed momenta")
     for extension in ("pdf", "png"):
-        kwargs = {"dpi": 220} if extension == "png" else {}
+        kwargs = {"dpi": 300} if extension == "png" else {}
+        kwargs["bbox_inches"] = "tight"
+        kwargs["pad_inches"] = 0.04
         figure.savefig(args.output_directory / f"cluster_schematic.{extension}", **kwargs)
     plt.close(figure)
 

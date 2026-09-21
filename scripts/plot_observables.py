@@ -8,17 +8,25 @@ from pathlib import Path
 os.environ.setdefault("MPLCONFIGDIR", "/tmp/xdiag_tri_hubbard_matplotlib")
 
 import matplotlib.pyplot as plt
+import matplotlib.patheffects as path_effects
 import numpy as np
+from matplotlib.ticker import AutoMinorLocator
+
+from plot_style import apply_plot_style
+
+
+apply_plot_style()
 
 
 def load_csv(path):
     return np.genfromtxt(path, delimiter=",", names=True, dtype=None, encoding="utf-8")
 
 
-def save(figure, output_base):
+def save(figure, output_base, dpi=180):
     output_base.parent.mkdir(parents=True, exist_ok=True)
-    figure.savefig(output_base.with_suffix(".pdf"))
-    figure.savefig(output_base.with_suffix(".png"), dpi=180)
+    figure.savefig(output_base.with_suffix(".pdf"), bbox_inches="tight", pad_inches=0.03)
+    figure.savefig(output_base.with_suffix(".png"), dpi=dpi,
+                   bbox_inches="tight", pad_inches=0.03)
     plt.close(figure)
 
 
@@ -30,66 +38,107 @@ def crossing_spans(axes):
 
 def plot_ground(data, output_base):
     u = data["U_over_t"]
-    figure, axes = plt.subplots(2, 2, figsize=(10.2, 7.2), constrained_layout=True)
+    figure, axes = plt.subplots(1, 2, figsize=(7.1, 2.85))
 
-    axes[0, 0].plot(u, data["double_occupancy"], "o-", color="#0072B2")
-    axes[0, 0].set_ylabel(r"$\langle n_\uparrow n_\downarrow\rangle$")
+    axes[0].plot(
+        u, data["double_occupancy"], "o-", color="#0072B2",
+        linewidth=1.65, markersize=4.5, markeredgewidth=0.0,
+    )
+    axes[0].set_ylabel(r"$\langle n_\uparrow n_\downarrow\rangle$", fontsize=10)
 
-    axes[0, 1].plot(u, data["spin_Gamma"], "o-", label=r"$\Gamma$")
-    axes[0, 1].plot(u, data["spin_Kcl"], "o-", label=r"$K_{\rm cl}$")
-    axes[0, 1].plot(u, data["spin_M1cl"], "o-", label=r"$M_{1,\rm cl}$")
-    axes[0, 1].plot(u, data["spin_M2"], "o-", label=r"$M_2$")
-    axes[0, 1].plot(u, data["spin_M3cl"], "o-", label=r"$M_{3,\rm cl}$")
-    axes[0, 1].set_ylabel(r"$S(\mathbf{q})$")
-    axes[0, 1].legend(frameon=False, fontsize=7.5, ncol=2)
+    axes[1].plot(
+        u, data["spin_Kcl"], "o-", color="#CC79A7",
+        linewidth=1.65, markersize=4.5, markeredgewidth=0.0,
+        label=r"$K_{\rm cl}$",
+    )
+    axes[1].plot(
+        u, data["spin_M2"], "s-", color="#009E73",
+        linewidth=1.65, markersize=4.1, markeredgewidth=0.0,
+        label=r"$M_2$",
+    )
+    axes[1].set_ylabel(r"$S(\mathbf{q})$", fontsize=10)
+    axes[1].legend(frameon=False, fontsize=8.6, loc="upper left",
+                   handlelength=1.7, handletextpad=0.45)
 
-    axes[1, 0].plot(u, data["charge_Gamma"], "o-", label=r"$\Gamma$")
-    axes[1, 0].plot(u, data["charge_Kcl"], "o-", label=r"$K_{\rm cl}$")
-    axes[1, 0].plot(u, data["charge_M1cl"], "o-", label=r"$M_{1,\rm cl}$")
-    axes[1, 0].plot(u, data["charge_M2"], "o-", label=r"$M_2$")
-    axes[1, 0].plot(u, data["charge_M3cl"], "o-", label=r"$M_{3,\rm cl}$")
-    axes[1, 0].set_ylabel(r"$N(\mathbf{q})$")
-    axes[1, 0].legend(frameon=False, fontsize=7.5, ncol=2)
-
-    axes[1, 1].plot(u, data["chirality_sf_Gamma"], "o-",
-                    label=r"$C_\chi^{\rm conn}(\Gamma)$")
-    axes[1, 1].plot(u, data["chirality_sf_Kcl"], "o-",
-                    label=r"$C_\chi(K_{\rm cl})$")
-    axes[1, 1].plot(u, data["chirality_sf_M2"], "o-",
-                    label=r"$C_\chi(M_2)$")
-    axes[1, 1].set_ylabel(r"connected chirality fluctuations $C_\chi(\mathbf{q})$")
-    axes[1, 1].legend(frameon=False, fontsize=8)
-
-    for axis in axes.flat:
-        axis.set_xlabel(r"$U/t$")
-        axis.grid(alpha=0.22, linewidth=0.6)
+    panel_labels = ("(a)", "(b)")
+    for axis, panel_label in zip(axes, panel_labels):
+        axis.set_xlabel(r"$U/t$", fontsize=10)
+        axis.set_xlim(5.9, 14.1)
+        axis.set_xticks(np.arange(6, 15, 2))
+        axis.xaxis.set_minor_locator(AutoMinorLocator(2))
+        axis.yaxis.set_minor_locator(AutoMinorLocator(2))
+        axis.tick_params(axis="both", which="major", direction="in",
+                         top=True, right=True, width=0.8, length=4.0,
+                         labelsize=8.6, pad=2.5)
+        axis.tick_params(axis="both", which="minor", direction="in",
+                         top=True, right=True, width=0.65, length=2.2)
+        for spine in axis.spines.values():
+            spine.set_linewidth(0.85)
+        axis.text(-0.10, 1.0, panel_label, transform=axis.transAxes,
+                  ha="right", va="top", fontsize=10.5,
+                  fontweight="bold", clip_on=False)
     crossing_spans(axes)
-    figure.suptitle("3x4 triangular Hubbard: ground-state observables")
-    save(figure, output_base)
+    figure.subplots_adjust(left=0.105, right=0.985, bottom=0.18, top=0.965,
+                           wspace=0.34)
+    save(figure, output_base, dpi=300)
 
 
 def plot_low_states(data, output_base):
     mask = data["energy_minus_ground"] <= 0.6 + 1e-12
     selected = data[mask]
     quantities = [
-        ("double_occupancy", r"$\langle n_\uparrow n_\downarrow\rangle$"),
         ("spin_Kcl", r"$S(K_{\rm cl})$"),
         ("spin_M2", r"$S(M_2)$"),
-        ("charge_Kcl", r"$N(K_{\rm cl})$"),
     ]
-    figure, axes = plt.subplots(2, 2, figsize=(10.4, 7.4), constrained_layout=True,
-                                sharex=True, sharey=True)
-    for axis, (field, label) in zip(axes.flat, quantities):
+    color_minimum = min(float(np.min(selected[field])) for field, _ in quantities)
+    color_maximum = max(float(np.max(selected[field])) for field, _ in quantities)
+
+    figure, axes = plt.subplots(
+        1, 2, figsize=(7.1, 3.0),
+        sharex=True, sharey=True,
+    )
+    points = []
+    for panel_index, (axis, (field, label)) in enumerate(zip(axes, quantities)):
         values = selected[field]
-        points = axis.scatter(selected["U_over_t"], selected["energy_minus_ground"],
-                              c=values, cmap="viridis", s=24, edgecolors="none")
-        figure.colorbar(points, ax=axis, label=label, shrink=0.88)
-        axis.set_xlabel(r"$U/t$")
-        axis.set_ylabel(r"$(E-E_0)/t$")
-        axis.grid(alpha=0.18, linewidth=0.5)
+        points.append(axis.scatter(
+            selected["U_over_t"], selected["energy_minus_ground"],
+            c=values, cmap="viridis", s=20, edgecolors="none",
+            vmin=color_minimum, vmax=color_maximum,
+        ))
+        axis.set_xlabel(r"$U/t$", fontsize=10)
+        axis.set_xlim(5.9, 14.1)
+        axis.set_ylim(-0.015, 0.61)
+        axis.set_xticks(np.arange(6, 15, 2))
+        axis.xaxis.set_minor_locator(AutoMinorLocator(2))
+        axis.yaxis.set_minor_locator(AutoMinorLocator(2))
+        axis.tick_params(axis="both", which="major", direction="in",
+                         top=True, right=True, width=0.8, length=4.0,
+                         labelsize=8.6, pad=2.5)
+        axis.tick_params(axis="both", which="minor", direction="in",
+                         top=True, right=True, width=0.65, length=2.2)
+        for spine in axis.spines.values():
+            spine.set_linewidth(0.85)
+        panel_label = "(a)" if panel_index == 0 else "(b)"
+        axis.text(
+            -0.10, 1.0, panel_label,
+            transform=axis.transAxes, ha="right", va="top",
+            fontsize=10.5, fontweight="bold", clip_on=False,
+        )
+        axis.text(
+            0.5, 1.025, label,
+            transform=axis.transAxes, ha="center", va="bottom",
+            fontsize=10, clip_on=False,
+        )
+    axes[0].set_ylabel(r"$(E-E_0)/t$", fontsize=10)
     crossing_spans(axes)
-    figure.suptitle(r"Low-lying states colored by observables ($E-E_0\leq0.6t$)")
-    save(figure, output_base)
+    figure.subplots_adjust(left=0.105, right=0.89, bottom=0.17, top=0.91,
+                           wspace=0.27)
+    colorbar_axis = figure.add_axes([0.915, 0.17, 0.018, 0.74])
+    colorbar = figure.colorbar(points[0], cax=colorbar_axis)
+    colorbar.set_label(r"$S(\mathbf{q})$", fontsize=10)
+    colorbar.ax.tick_params(direction="in", width=0.8, length=3.5,
+                            labelsize=8.6)
+    save(figure, output_base, dpi=300)
 
 
 B1 = np.array([2 * np.pi, -2 * np.pi / np.sqrt(3)])
@@ -202,45 +251,85 @@ def validate_chirality_interpolation(correlations, grid_rows, u_value):
             raise ValueError("chirality interpolation does not reproduce allowed momenta")
 
 
-def plot_heatmaps(correlation_rows, chirality_rows, chirality_gram_rows, output_base):
+def plot_heatmaps(correlation_rows, output_base):
     xx, yy, q1, q2 = extended_momentum_grid()
     x_limits = (float(np.min(xx)), float(np.max(xx)))
     y_limits = (float(np.min(yy)), float(np.max(yy)))
     allowed_cart = allowed_momentum_replicas(x_limits, y_limits)
     bz = first_bz_vertices()
-    selections = [("U8_k10", 8.0, r"$U/t=8$, $(1,0)$"),
-                  ("U14_Gamma", 14.0, r"$U/t=14$, $\Gamma(A)$")]
-    figure, axes = plt.subplots(2, 3, figsize=(13.2, 8.2), constrained_layout=True)
-    figure.suptitle(
-        "Extended momentum space: dots are allowed momenta; dashed hexagon is the first BZ",
-        fontsize=14,
+    selections = [("U8_k10", 8.0, r"$U/t=8$"),
+                  ("U14_Gamma", 14.0, r"$U/t=14$")]
+    fields = [
+        evaluate_displacements(
+            read_selected_correlation(correlation_rows, tag, "spin"), q1, q2
+        )
+        for tag, _, _ in selections
+    ]
+    color_maximum = max(float(np.max(field)) for field in fields)
+    display_xx = xx / np.pi
+    display_yy = yy / np.pi
+    display_allowed = allowed_cart / np.pi
+    display_bz = bz / np.pi
+    display_x_limits = (x_limits[0] / np.pi, x_limits[1] / np.pi)
+    display_y_limits = (y_limits[0] / np.pi, y_limits[1] / np.pi)
+
+    figure = plt.figure(figsize=(7.1, 3.75))
+    grid = figure.add_gridspec(
+        1, 3, width_ratios=(1.0, 1.0, 0.04),
+        left=0.080, right=0.935, bottom=0.14, top=0.90, wspace=0.070,
     )
-    for row_index, (tag, u_value, state_label) in enumerate(selections):
-        spin = read_selected_correlation(correlation_rows, tag, "spin")
-        charge = read_selected_correlation(correlation_rows, tag, "charge")
-        chi_gram = read_chirality_gram(chirality_gram_rows, tag)
-        chi_correlations = chirality_correlations_from_gram(chi_gram)
-        validate_chirality_interpolation(chi_correlations, chirality_rows, u_value)
-        fields = [
-            (evaluate_displacements(spin, q1, q2), r"$S(\mathbf{q})$"),
-            (evaluate_displacements(charge, q1, q2), r"$N(\mathbf{q})$"),
-            (evaluate_chirality(chi_correlations, q1, q2), r"$C_\chi(\mathbf{q})$"),
-        ]
-        for column, (field, title) in enumerate(fields):
-            axis = axes[row_index, column]
-            image = axis.pcolormesh(
-                xx, yy, field, shading="auto", cmap="magma", rasterized=True
-            )
-            axis.plot(bz[:, 0], bz[:, 1], "w--", linewidth=1.1)
-            axis.scatter(allowed_cart[:, 0], allowed_cart[:, 1], s=10,
-                         facecolors="white", edgecolors="black", linewidths=0.6)
-            axis.set_aspect("equal")
-            axis.set_xlim(*x_limits)
-            axis.set_ylim(*y_limits)
-            axis.set_xlabel(r"$q_x$")
-            axis.set_ylabel(r"$q_y$")
-            axis.set_title(f"{state_label}: {title}", fontsize=11)
-            figure.colorbar(image, ax=axis, shrink=0.82)
+    axes = np.asarray([
+        figure.add_subplot(grid[0, 0]),
+        figure.add_subplot(grid[0, 1]),
+    ])
+    colorbar_axis = figure.add_subplot(grid[0, 2])
+    images = []
+    for panel_index, (axis, field, (_, _, state_label)) in enumerate(
+        zip(axes, fields, selections)
+    ):
+        image = axis.pcolormesh(
+            display_xx, display_yy, field, shading="auto", cmap="magma",
+            vmin=0.0, vmax=color_maximum, rasterized=True,
+        )
+        images.append(image)
+        axis.plot(display_bz[:, 0], display_bz[:, 1], "w--", linewidth=1.35)
+        axis.scatter(
+            display_allowed[:, 0], display_allowed[:, 1], s=14,
+            facecolors="white", edgecolors="#222222", linewidths=0.65,
+        )
+        axis.set_aspect("equal")
+        axis.set_xlim(*display_x_limits)
+        axis.set_ylim(*display_y_limits)
+        axis.set_xticks(np.arange(-2, 2.1, 1))
+        axis.set_yticks(np.arange(-2, 2.1, 1))
+        axis.set_xlabel(r"$q_x/\pi$", fontsize=10.5)
+        axis.set_ylabel(r"$q_y/\pi$" if panel_index == 0 else "", fontsize=10.5)
+        axis.tick_params(axis="both", which="major", direction="in",
+                         top=True, right=True, width=0.8, length=4.0,
+                         labelsize=9.2)
+        if panel_index == 1:
+            axis.tick_params(labelleft=False)
+        for spine in axis.spines.values():
+            spine.set_linewidth(0.85)
+        panel_label = "(a)" if panel_index == 0 else "(b)"
+        panel_text = axis.text(
+            0.035, 0.965, panel_label,
+            transform=axis.transAxes, ha="left", va="top",
+            fontsize=11, fontweight="bold", color="white",
+        )
+        panel_text.set_path_effects([
+            path_effects.withStroke(linewidth=1.5, foreground="#222222")
+        ])
+        axis.text(
+            0.5, 1.025, state_label,
+            transform=axis.transAxes, ha="center", va="bottom",
+            fontsize=11, clip_on=False,
+        )
+
+    colorbar = figure.colorbar(images[0], cax=colorbar_axis)
+    colorbar.set_label(r"$S(\mathbf{q})$", fontsize=10.5)
+    colorbar.ax.tick_params(direction="in", width=0.8, length=3.5,
+                            labelsize=9.2)
     save(figure, output_base)
 
 
@@ -258,14 +347,9 @@ def main():
     states = load_csv(args.state_table)
     ground = load_csv(args.ground_table)
     heatmap = load_csv(args.heatmap_correlations)
-    chirality = load_csv(args.chirality_grid)
-    chirality_gram = load_csv(args.chirality_sublattice_gram)
     plot_ground(ground, args.output_directory / "ground_state_observables")
     plot_low_states(states, args.output_directory / "low_lying_state_observables")
-    plot_heatmaps(
-        heatmap, chirality, chirality_gram,
-        args.output_directory / "structure_factor_heatmaps",
-    )
+    plot_heatmaps(heatmap, args.output_directory / "structure_factor_heatmaps")
 
 
 if __name__ == "__main__":

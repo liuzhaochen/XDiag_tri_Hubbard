@@ -9,6 +9,12 @@ os.environ.setdefault("MPLCONFIGDIR", "/tmp/xdiag_tri_hubbard_matplotlib")
 
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.ticker import AutoMinorLocator
+
+from plot_style import apply_plot_style
+
+
+apply_plot_style()
 
 
 COLORS = {
@@ -21,6 +27,18 @@ COLORS = {
     (1, 1, 0): "#000000",
     (1, 2, 0): "#7A3E9D",
     (1, 3, 0): "#777777",
+}
+
+LINESTYLES = {
+    (0, 0, 1): "-",
+    (0, 0, -1): "--",
+    (0, 1, 0): "-",
+    (0, 2, 1): "-",
+    (0, 2, -1): "--",
+    (1, 0, 0): "-",
+    (1, 1, 0): "-",
+    (1, 2, 0): "-",
+    (1, 3, 0): "-",
 }
 
 
@@ -52,8 +70,7 @@ def select(data, key, level):
     return rows[np.argsort(rows["U_over_t"])]
 
 
-def plot_panel(data, keys, output_base, title, all_levels=True):
-    figure, axis = plt.subplots(figsize=(7.2, 4.8), constrained_layout=True)
+def draw_panel(axis, data, keys, panel_label, all_levels=True):
     levels = sorted({int(value) for value in data["level_index"]}) if all_levels else [1]
     for key in keys:
         for level in levels:
@@ -64,19 +81,66 @@ def plot_panel(data, keys, output_base, title, all_levels=True):
                 rows["U_over_t"],
                 rows["energy_minus_ground"],
                 color=COLORS[key],
-                linewidth=1.55 if level == 1 else 0.9,
-                alpha=1.0 if level == 1 else 0.58,
+                linestyle=LINESTYLES[key],
+                linewidth=1.35 if level == 1 else 0.60,
+                alpha=1.0 if level == 1 else 0.45,
                 marker="o",
-                markersize=2.8 if level == 1 else 1.8,
+                markersize=2.25 if level == 1 else 1.10,
+                markeredgewidth=0.0,
                 label=sector_label(key) if level == 1 else None,
             )
-    axis.set_xlabel(r"$U/t$")
-    axis.set_ylabel(r"$(E-E_0)/t$")
-    axis.set_title(title)
-    axis.grid(alpha=0.22, linewidth=0.6)
-    axis.legend(fontsize=8, ncol=2, frameon=False)
-    figure.savefig(output_base.with_suffix(".pdf"))
-    figure.savefig(output_base.with_suffix(".png"), dpi=220)
+    axis.set_xlim(float(np.min(data["U_over_t"])), float(np.max(data["U_over_t"])))
+    axis.set_ylim(-0.015, 1.0)
+    axis.set_xticks(np.arange(6, 15, 2))
+    axis.set_yticks(np.arange(0.0, 1.01, 0.2))
+    axis.xaxis.set_minor_locator(AutoMinorLocator(2))
+    axis.yaxis.set_minor_locator(AutoMinorLocator(2))
+    axis.tick_params(axis="both", which="major", direction="in",
+                     top=True, right=True, width=0.8, length=4.0,
+                     labelsize=8.3, pad=2.5)
+    axis.tick_params(axis="both", which="minor", direction="in",
+                     top=True, right=True, width=0.65, length=2.2)
+    for spine in axis.spines.values():
+        spine.set_linewidth(0.85)
+    axis.text(0.0, 1.035, panel_label, transform=axis.transAxes,
+              ha="left", va="bottom", fontsize=9.8,
+              fontweight="bold", clip_on=False)
+
+
+def plot_overview(data, keys, output_base):
+    figure, axes = plt.subplots(
+        1, 3, figsize=(7.1, 3.05), sharex=True, sharey=True,
+    )
+    draw_panel(axes[0], data, keys, "(a)", all_levels=False)
+    draw_panel(
+        axes[1], data,
+        [(0, 0, 1), (0, 0, -1), (1, 0, 0)],
+        r"(b)  $K_y=0$",
+    )
+    draw_panel(
+        axes[2], data,
+        [(0, 2, 1), (0, 2, -1), (1, 2, 0)],
+        r"(c)  $K_y=\pi$",
+    )
+
+    axes[0].set_ylabel(r"$(E-E_0)/t$", fontsize=9.6)
+    for axis in axes:
+        axis.set_xlabel(r"$U/t$", fontsize=9.6)
+
+    handles, labels = axes[0].get_legend_handles_labels()
+    figure.legend(
+        handles, labels, fontsize=7.8, ncol=5, frameon=False,
+        loc="upper center", bbox_to_anchor=(0.54, 0.985),
+        handlelength=1.45, handletextpad=0.35, columnspacing=0.85,
+        labelspacing=0.35,
+    )
+    figure.subplots_adjust(
+        left=0.085, right=0.992, bottom=0.17, top=0.73, wspace=0.10,
+    )
+
+    figure.savefig(output_base.with_suffix(".pdf"), bbox_inches="tight", pad_inches=0.03)
+    figure.savefig(output_base.with_suffix(".png"), dpi=300,
+                   bbox_inches="tight", pad_inches=0.03)
     plt.close(figure)
 
 
@@ -89,45 +153,7 @@ def main():
     data = np.genfromtxt(args.table, delimiter=",", names=True)
     keys = sector_keys(data)
 
-    plot_panel(
-        data,
-        keys,
-        args.output_directory / "complete_inequivalent_spectrum",
-        "3x4 triangular Hubbard: inequivalent spectrum",
-    )
-    plot_panel(
-        data,
-        keys,
-        args.output_directory / "all_sector_lowest_branches",
-        "3x4 triangular Hubbard: lowest state in each block",
-        all_levels=False,
-    )
-    plot_panel(
-        data,
-        [(0, 0, 1), (0, 0, -1), (1, 0, 0)],
-        args.output_directory / "Ky_0_spectrum",
-        r"$K_y=0$",
-    )
-    plot_panel(
-        data,
-        [(0, 2, 1), (0, 2, -1), (1, 2, 0)],
-        args.output_directory / "Ky_pi_spectrum",
-        r"$K_y=\pi$",
-    )
-    plot_panel(
-        data,
-        [
-            (0, 0, 1),
-            (0, 0, -1),
-            (1, 0, 0),
-            (0, 2, 1),
-            (0, 2, -1),
-            (1, 2, 0),
-        ],
-        args.output_directory / "Ky_0_pi_lowest_branches",
-        r"Lowest branches on $K_y=0,\pi$",
-        all_levels=False,
-    )
+    plot_overview(data, keys, args.output_directory / "spectrum_overview")
 
 
 if __name__ == "__main__":
