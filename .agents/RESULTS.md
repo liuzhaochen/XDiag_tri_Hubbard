@@ -25,6 +25,11 @@ Both branches lie on the `Ky=0` line. The competing zero-momentum state is
 The smallest coarse-grid many-body gap is `0.00225145631249 t` at `U/t=6.5`,
 consistent with the first crossing lying close to that grid point.
 
+The complete 17-point table of total absolute ground-state energies is recorded
+in `docs/physical_report.md`. Representative values are
+`E0/t=-9.449421375617` at `U/t=6`, `-6.991271041267` at `U/t=8`, and
+`-4.177995122554` at `U/t=14`.
+
 Several additional crossings occur between excited block-lowest branches. They are
 not refinement targets until the two ground crossings are resolved.
 

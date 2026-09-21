@@ -151,6 +151,34 @@ dimensional.
 
 ## Observed crossings
 
+### Absolute ground-state energies on the coarse grid
+
+The ground-state energy depends on `U/t`; there is no single energy for the
+entire scan. The table reports the total 12-site energy `E0/t` (not the energy
+per site) and the symmetry block containing the ground state at each sampled
+coupling. In the finite-momentum interval, the displayed `(1,0)` state has the
+exact time-reversal partner `(2,0)` at the same energy.
+
+| `U/t` | `E0/t` | ground block |
+|---:|---:|---|
+| 6.0 | -9.449421375617 | `Gamma(A)` |
+| 6.5 | -8.731411335705 | `Gamma(A)` |
+| 7.0 | -8.083211870427 | `(1,0)` |
+| 7.5 | -7.504377646981 | `(1,0)` |
+| 8.0 | -6.991271041267 | `(1,0)` |
+| 8.5 | -6.540589688619 | `(1,0)` |
+| 9.0 | -6.147331897413 | `(1,0)` |
+| 9.5 | -5.819228521916 | `Gamma(A)` |
+| 10.0 | -5.559893571224 | `Gamma(A)` |
+| 10.5 | -5.332453035762 | `Gamma(A)` |
+| 11.0 | -5.127262372717 | `Gamma(A)` |
+| 11.5 | -4.939223402910 | `Gamma(A)` |
+| 12.0 | -4.765333453689 | `Gamma(A)` |
+| 12.5 | -4.603589324239 | `Gamma(A)` |
+| 13.0 | -4.452519563381 | `Gamma(A)` |
+| 13.5 | -4.310969963265 | `Gamma(A)` |
+| 14.0 | -4.177995122554 | `Gamma(A)` |
+
 ### Ground branch on `Ky=0`
 
 Two crossings occur between different symmetry blocks,

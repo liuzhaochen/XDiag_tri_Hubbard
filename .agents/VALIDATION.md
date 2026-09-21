@@ -115,3 +115,21 @@ spectrum agrees with XDiag to `1e-11`.
   labels; observable plots show the three `M` representatives separately and only
   fixed-momentum chirality correlations. The extended-zone heatmap PDF is 167 KiB
   after reducing the mesh to `111 x 111` and rasterizing it (previously about 8 MiB).
+
+## Deferred `4 x 4` resource estimate
+
+- The half-filled fixed-particle space is `binomial(16,8)^2 = 165,636,900`.
+- A translation-only block has dimension about `10,352,306`, roughly `145` times
+  the largest `3 x 4` block.
+- The expected average row has about `52.2` nonzeros, giving about `540 million`
+  CSR nonzeros and `10.9 GB` of CSR storage.
+- Extrapolation from measured `3 x 4` timings gives about `55--75 min` on four
+  CPUs for one guarded ground state and about `3--4 h` for six states in a
+  typical translation-only block. Convergence outliers can take longer.
+- A 17-point, four-momentum-star ground-only scan contains 68 solves and is
+  estimated at roughly `230--350 CPU h`; the analogous six-state scan is roughly
+  `900--1400 CPU h`.
+- The present all-momentum chirality algorithm extrapolates to several hours per
+  coupling on four CPUs and should be optimized before `4 x 4` production.
+- These are planning estimates, not a `4 x 4` benchmark. Any resumed study starts
+  with full-`D6` implementation and a one-coupling compute-node pilot.

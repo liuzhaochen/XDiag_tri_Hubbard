@@ -66,3 +66,11 @@
   fluctuations at `Gamma`, `Kcl`, and `M2` instead.
 - Momentum heatmaps use a lower-resolution extended-zone view with allowed-point
   replicas and a dashed first-BZ boundary; the heatmap mesh is rasterized in PDF.
+- The validated `3 x 4` calculation is the completed active study. A possible
+  `4 x 4` extension is deferred until the user requests it.
+- The `4 x 4` torus restores the complete triangular `D6` point group. Its sector
+  code must therefore implement the appropriate `D6` little-group irreps; the
+  `3 x 4` `C2`-only labels must not be carried over.
+- A translation-only `4 x 4` half-filled block is estimated to have dimension
+  about `10,352,306`, about `540 million` CSR nonzeros, and about `10.9 GB` of
+  CSR storage. Use a compute-node pilot before choosing production resources.

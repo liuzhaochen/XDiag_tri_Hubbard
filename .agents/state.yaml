@@ -1,11 +1,11 @@
 updated: 2026-09-21
-stage: observable_review
+stage: N12_complete
 status: ready_for_professor_discussion
 scope:
   cluster: 3x4
   sites: 12
   filling: {nup: 6, ndn: 6}
-  deferred: [4x4]
+  deferred: [4x4_full_D6_ED]
 constraints:
   julia_on_login: forbidden
   slurm_partition: test
@@ -15,8 +15,8 @@ scan:
   levels_per_block: 6
   production_momentum_stars: 7
   little_group_irreps: {Gamma: [A, B], M2: [A, B]}
-current_gate: discuss_interpretation_and_optional_next_diagnostics
-next_action: review_crossings_observables_and_decide_on_twists_overlaps_or_4x4
+current_gate: professor_discussion
+next_action: await_user_request_for_optional_followup_or_4x4_full_D6_pilot
 jobs:
   - {id: 3324639, purpose: sector_spectrum_validation, status: completed}
   - {id: 3325184, purpose: N12_coarse_spectrum, status: completed_with_one_targeted_rerun}
@@ -43,3 +43,10 @@ artifacts:
   - plots/N12/ground_state_observables.png
   - plots/N12/low_lying_state_observables.png
   - plots/N12/structure_factor_heatmaps.png
+deferred_4x4_estimate:
+  raw_dimension: 165636900
+  translation_block_dimension_approx: 10352306
+  csr_nonzeros_approx: 540390000
+  csr_storage_gb_approx: 10.9
+  ground_only_scan: {u_points: 17, momentum_stars: 4, solves: 68, cpu_hours: "230-350"}
+  requirements: [full_D6_little_groups, one_coupling_compute_node_pilot]

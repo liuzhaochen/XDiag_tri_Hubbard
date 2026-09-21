@@ -26,7 +26,9 @@
   momenta, retaining the full up/down-triangle sublattice Gram matrix.
 - [x] Generate ground-state, low-state, representative heatmap, and cluster
   schematic plots; incorporate their interpretation in the physical report.
-- [ ] Discuss whether a `4 x 4` calculation is scientifically and computationally justified.
+- [x] Estimate a possible `4 x 4` calculation and defer it until explicitly
+  requested. A future implementation must use the full surviving `D6` symmetry,
+  not reuse the `3 x 4` `C2` sector inventory.
 
 ## Production policy
 
@@ -39,3 +41,6 @@
 - A result is accepted only after its solver diagnostics pass declared thresholds.
 - Continuous heatmap colors are finite Fourier visualizations; allowed cluster
   momenta are always marked explicitly as dots.
+- A `4 x 4` study is not active production work. If resumed, begin with a
+  full-`D6` sector implementation and a one-point resource benchmark before any
+  17-point scan.
